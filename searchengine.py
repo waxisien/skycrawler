@@ -9,6 +9,9 @@ class crawler:
     self._index = []
     self._conn = sqlite3.connect('skyscrapers.db')
 
+    self.deletedb()
+    self.setupdb()
+
     # Init url index with previously fetch buildings
     cursor = self._conn.cursor()
     cursor.execute('''SELECT link from buildings''')
@@ -17,6 +20,18 @@ class crawler:
 
   def __del__(self):
     self._conn.close()
+
+  # Create the database tables
+  def setupdb(self): 
+    curs = self._conn.cursor()
+    curs.execute('''CREATE TABLE IF NOT EXISTS buildings
+             (city text, name text, height int, floors int, link text, insert_date date)''')
+    self._conn.commit()
+
+  def deletedb(self):
+    curs = self._conn.cursor()
+    curs.execute('''DROP TABLE IF EXISTS buildings''')
+    self._conn.commit()
 
   # Index an individual page
   def addtoindex(self,url,link):
@@ -85,10 +100,12 @@ class crawler:
 
       print self._index
 
-  
-  # Create the database tables
-  def setupdb(self): 
-    curs = self._conn.cursor()
-    curs.execute('''CREATE TABLE IF NOT EXISTS buildings
-             (city text, name text, height int, floors int, link text, insert_date date)''')
-    self._conn.commit()
+if __name__ == '__main__':
+
+  crawler = crawler()
+
+  forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720', # Skyscrapers
+            'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls
+            'http://www.skyscrapercity.com/forumdisplay.php?f=1718'] # Proposed skyscrapers
+
+  crawler.crawl(forums, depth=1)
