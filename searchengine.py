@@ -1,15 +1,20 @@
+#!/usr/bin/env python
+
 import urllib2
 from BeautifulSoup import *
 from urlparse import urljoin
 import sqlite3
+import argparse
+import re
 
 class crawler:
 
-  def __init__(self):
+  def __init__(self, flush_db=False):
     self._index = []
     self._conn = sqlite3.connect('skyscrapers.db')
 
-    self.deletedb()
+    if flush_db:
+      self.deletedb()
     self.setupdb()
 
     # Init url index with previously fetch buildings
@@ -37,10 +42,31 @@ class crawler:
   def addtoindex(self,url,link):
     self._index.append(url);
     values = self.separatewords(link.getText())
+    print values
     if len(values) > 3:
+      name = values[1]
+      city = values[0]
+      height = None
+      floors = None
+      for value in values:
+        if height is None:
+          reg_height_m = re.match(r'~?\+?(?P<height>\d{3,})m', value)
+          reg_height_ft = re.match(r'~?\+?(?P<height>\d{3,})ft', value)
+          if reg_height_m:
+            height = reg_height_m.group('height')
+          elif reg_height_ft:
+            height = reg_height_ft.group('height')
+            height = int(int(height) * 0.3048)
+
+        if floors is None:
+          reg_floors = re.match(r'(?P<floors>\d{2,})~?\+? fl', value)
+          if reg_floors:
+              floors = reg_floors.group('floors')
+
+      print height, ' ', floors
       cursor = self._conn.cursor()
       cursor.execute('''INSERT INTO buildings VALUES(?, ?, ?, ?, ?, datetime())''', 
-        (values[0], values[1], values[2], values[3], url))
+        (values[0], values[1], height, floors, url))
       self._conn.commit()
     
   # Extract the text from an HTML page (no tags)
@@ -94,15 +120,20 @@ class crawler:
             url=url.split('#')[0]  # remove location portion
             if self.isuseful(url) and not self.isindexed(url):
               self.addtoindex(url, link)
-              print self.separatewords(link.getText()), ' ', url
+              # self.separatewords(link.getText()), ' ', url
               newpages.append(url)
    	  pages=newpages
 
-      print self._index
-
 if __name__ == '__main__':
 
-  crawler = crawler()
+  parser = argparse.ArgumentParser(description='Crawler to get latest skyscrapers developpment.')
+  
+  parser.add_argument('--flush-db', dest='flush_db', action='store_true')
+  parser.set_defaults(flush_db=False)
+
+  args = parser.parse_args()
+
+  crawler = crawler(args.flush_db)
 
   forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720', # Skyscrapers
             'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls
