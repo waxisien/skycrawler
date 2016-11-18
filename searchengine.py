@@ -42,7 +42,6 @@ class crawler:
   def addtoindex(self,url,link):
     self._index.append(url);
     values = self.separatewords(link.getText())
-    print values
     if len(values) > 3:
       name = values[1]
       city = values[0]
@@ -63,7 +62,6 @@ class crawler:
           if reg_floors:
               floors = reg_floors.group('floors')
 
-      print height, ' ', floors
       cursor = self._conn.cursor()
       cursor.execute('''INSERT INTO buildings VALUES(?, ?, ?, ?, ?, datetime())''', 
         (values[0], values[1], height, floors, url))
@@ -97,7 +95,10 @@ class crawler:
     return '&page=' not in url
 
   def isuseful(self, url):
-    return url[0:4]=='http' and url.startswith('http://www.skyscrapercity') and self.isfirstpage(url) and self.isforumpart(url)
+    return url.startswith('http://www.skyscrapercity') and self.isfirstpage(url) and self.isforumpart(url)
+
+  def ismenu(self, url):
+    return url.startswith('http://www.skyscrapercity') and 'forumdisplay.php' in url
 
   # Starting with a list of pages, do a breadth
   # first search to the given depth, indexing pages
@@ -120,7 +121,8 @@ class crawler:
             url=url.split('#')[0]  # remove location portion
             if self.isuseful(url) and not self.isindexed(url):
               self.addtoindex(url, link)
-              # self.separatewords(link.getText()), ' ', url
+            # We only parse forum menu pages since they contain thread titles
+            if self.ismenu(url) and url not in pages:
               newpages.append(url)
    	  pages=newpages
 
@@ -130,6 +132,8 @@ if __name__ == '__main__':
   
   parser.add_argument('--flush-db', dest='flush_db', action='store_true')
   parser.set_defaults(flush_db=False)
+  parser.add_argument("-d", "--depth", type=int, default=1,
+                    help="The depth used to crawl the site")
 
   args = parser.parse_args()
 
@@ -139,4 +143,4 @@ if __name__ == '__main__':
             'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls
             'http://www.skyscrapercity.com/forumdisplay.php?f=1718'] # Proposed skyscrapers
 
-  crawler.crawl(forums, depth=1)
+  crawler.crawl(forums, depth=args.depth)
