@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, render_template
 import sqlite3
 
 app = Flask(__name__)
@@ -9,13 +9,12 @@ def raw():
     conn = sqlite3.connect('skyscrapers.db')
 
     cursor = conn.cursor()
-    cursor.execute('''SELECT * from buildings''')
+    cursor.execute('''SELECT * from buildings ORDER BY height DESC LIMIT 10''')
     data = []
     for url in cursor.fetchall():
-      data.append(url[0])
+      data.append({'city': url[0], 'name': url[1], 'height':url[2]})
 
-    return Response(response=data,
-    mimetype="application/json"), 200
+    return render_template('raw.html', buildings=data)
 
 
 @app.route('/', methods=['GET'])

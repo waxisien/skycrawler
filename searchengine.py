@@ -19,9 +19,9 @@ class crawler:
 
     # Init url index with previously fetch buildings
     cursor = self._conn.cursor()
-    cursor.execute('''SELECT link from buildings''')
-    for url in cursor.fetchall():
-      self._index.append(url[0])
+    cursor.execute('''SELECT city, name from buildings''')
+    for building in cursor.fetchall():
+      self._index.append(self.sanitizebuilding(building))
 
   def __del__(self):
     self._conn.close()
@@ -39,33 +39,31 @@ class crawler:
     self._conn.commit()
 
   # Index an individual page
-  def addtoindex(self,url,link):
-    self._index.append(url);
-    values = self.separatewords(link.getText())
-    if len(values) > 3:
-      name = values[1]
-      city = values[0]
-      height = None
-      floors = None
-      for value in values:
-        if height is None:
-          reg_height_m = re.match(r'~?\+?(?P<height>\d{3,})m', value)
-          reg_height_ft = re.match(r'~?\+?(?P<height>\d{3,})ft', value)
-          if reg_height_m:
-            height = reg_height_m.group('height')
-          elif reg_height_ft:
-            height = reg_height_ft.group('height')
-            height = int(int(height) * 0.3048)
+  def addtoindex(self,url,values):
+    city = values[0]
+    name = values[1]
+    self._index.append(self.sanitizebuilding(values))
+    height = None
+    floors = None
+    for value in values:
+      if height is None:
+        reg_height_m = re.match(r'~?\+?(?P<height>\d{3,})m', value)
+        reg_height_ft = re.match(r'~?\+?(?P<height>\d{3,})ft', value)
+        if reg_height_m:
+          height = reg_height_m.group('height')
+        elif reg_height_ft:
+          height = reg_height_ft.group('height')
+          height = int(int(height) * 0.3048)
 
-        if floors is None:
-          reg_floors = re.match(r'(?P<floors>\d{2,})~?\+? fl', value)
-          if reg_floors:
-              floors = reg_floors.group('floors')
+      if floors is None:
+        reg_floors = re.match(r'(?P<floors>\d{2,})~?\+? fl', value)
+        if reg_floors:
+            floors = reg_floors.group('floors')
 
-      cursor = self._conn.cursor()
-      cursor.execute('''INSERT INTO buildings VALUES(?, ?, ?, ?, ?, datetime())''', 
-        (values[0], values[1], height, floors, url))
-      self._conn.commit()
+    cursor = self._conn.cursor()
+    cursor.execute('''INSERT INTO buildings VALUES(?, ?, ?, ?, ?, datetime())''', 
+      (values[0], values[1], height, floors, url))
+    self._conn.commit()
     
   # Extract the text from an HTML page (no tags)
   def gettextonly(self,soup):
@@ -85,8 +83,8 @@ class crawler:
     return [x.strip() for x in text.split('|')]
 
   # Return true if this url is already indexed
-  def isindexed(self,url):
-    return url in self._index
+  def isindexed(self,values):
+    return self.sanitizebuilding(values) in self._index
 
   def isforumpart(self,url):
     return 'forumdisplay.php' in url or 'showthread.php' in url
@@ -99,6 +97,11 @@ class crawler:
 
   def ismenu(self, url):
     return url.startswith('http://www.skyscrapercity') and 'forumdisplay.php' in url
+
+  def sanitizebuilding(self, values):
+    city = values[0]
+    name = values[1]
+    return (city+name).lower().replace(' ', '')
 
   # Starting with a list of pages, do a breadth
   # first search to the given depth, indexing pages
@@ -119,8 +122,9 @@ class crawler:
           if ('href' in dict(link.attrs)):
             url=urljoin(page,link['href'])
             url=url.split('#')[0]  # remove location portion
-            if self.isuseful(url) and not self.isindexed(url):
-              self.addtoindex(url, link)
+            values = self.separatewords(link.getText())
+            if len(values) > 3 and self.isuseful(url) and not self.isindexed(values):
+              self.addtoindex(url, values)
             # We only parse forum menu pages since they contain thread titles
             if self.ismenu(url) and url not in pages:
               newpages.append(url)
