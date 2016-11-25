@@ -2,7 +2,7 @@
 {% block body %}
   <ul class=entries>
   {% for building in buildings %}
-    <li><h4>{{ building.get('city') }}</h4>{{ building.get('name')|safe }} {{ building.get('height')|safe }}m
+    <li><h5>{{ building.get('city') }}</h5><a href="{{ building.get('link') }}" target="_blank">{{ building.get('name')|safe }} {{ building.get('height')|safe }}m</a>
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em>
   {% endfor %}

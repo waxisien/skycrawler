@@ -9,10 +9,10 @@ def raw():
     conn = sqlite3.connect('skyscrapers.db')
 
     cursor = conn.cursor()
-    cursor.execute('''SELECT * from buildings ORDER BY height DESC LIMIT 10''')
+    cursor.execute('''SELECT * from buildings ORDER BY height DESC LIMIT 30''')
     data = []
     for url in cursor.fetchall():
-      data.append({'city': url[0], 'name': url[1], 'height':url[2]})
+      data.append({'city': url[0], 'name': url[1], 'height':url[2],'link':url[4]})
 
     return render_template('raw.html', buildings=data)
 

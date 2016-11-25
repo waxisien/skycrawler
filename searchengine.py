@@ -7,10 +7,13 @@ import sqlite3
 import argparse
 import re
 
+from geopy.geocoders import Nominatim
+
 class crawler:
 
   def __init__(self, flush_db=False):
-    self._index = []
+    self._buildings = []
+    self._cities = {}
     self._conn = sqlite3.connect('skyscrapers.db')
 
     if flush_db:
@@ -19,9 +22,13 @@ class crawler:
 
     # Init url index with previously fetch buildings
     cursor = self._conn.cursor()
-    cursor.execute('''SELECT city, name from buildings''')
+    cursor.execute('''SELECT city.name, building.name from building INNER JOIN city ON building.city_id = city.ROWID''')
     for building in cursor.fetchall():
-      self._index.append(self.sanitizebuilding(building))
+      self._buildings.append(self.sanitizebuilding(building))
+
+    cursor.execute('''SELECT ROWID, name from city''')
+    for city in cursor.fetchall():
+      self._cities[building[1].lower().replace(' ', '')] = building[0]
 
   def __del__(self):
     self._conn.close()
@@ -29,22 +36,27 @@ class crawler:
   # Create the database tables
   def setupdb(self): 
     curs = self._conn.cursor()
-    curs.execute('''CREATE TABLE IF NOT EXISTS buildings
-             (city text, name text, height int, floors int, link text, insert_date date)''')
+    curs.execute('''CREATE TABLE IF NOT EXISTS city
+              (name text, latitude real, longitude real, creation_date date);''')
+    curs.execute('''CREATE TABLE IF NOT EXISTS building
+             (name text, height int, floors int, link text, city_id int, creation_date date);''')
     self._conn.commit()
 
   def deletedb(self):
     curs = self._conn.cursor()
-    curs.execute('''DROP TABLE IF EXISTS buildings''')
+    curs.execute('''DROP TABLE IF EXISTS city''')
+    curs.execute('''DROP TABLE IF EXISTS building''')
     self._conn.commit()
 
   # Index an individual page
   def addtoindex(self,url,values):
     city = values[0]
+    city_key = values[0].lower().replace(' ', '')
     name = values[1]
-    self._index.append(self.sanitizebuilding(values))
     height = None
     floors = None
+    latitude = None
+    longitude = None
     for value in values:
       if height is None:
         reg_height_m = re.match(r'~?\+?(?P<height>\d{3,})m', value)
@@ -60,11 +72,38 @@ class crawler:
         if reg_floors:
             floors = reg_floors.group('floors')
 
+    if self._cities.get(city_key):
+      city_id = self._cities[city_key]
+    else:
+      city_id = self.insert_city(city, latitude, longitude)
+      self._cities[city_key] = city_id
+    self.insert_building(name, height, floors, url, city_id)
+    self._buildings.append(self.sanitizebuilding(values))
+
+  def insert_building(self, name, height, floors, link, city_id):
     cursor = self._conn.cursor()
-    cursor.execute('''INSERT INTO buildings VALUES(?, ?, ?, ?, ?, datetime())''', 
-      (values[0], values[1], height, floors, url))
+    cursor.execute('''INSERT INTO building (name, height, floors, link, city_id, creation_date) VALUES(?, ?, ?, ?, ?, datetime())''',
+      (name, height, floors, link, city_id))
     self._conn.commit()
-    
+
+  def insert_city(self, name, latitude, longitude):
+    cursor = self._conn.cursor()
+    cursor.execute('''INSERT INTO city (name, latitude, longitude, creation_date) VALUES(?, ?, ?, datetime())''',
+      (name, latitude, longitude))
+    self._conn.commit()
+    return cursor.lastrowid
+
+  def getcitycoordonates(self):
+    geolocator = Nominatim()
+    cursor = self._conn.cursor()
+
+    cursor.execute('''SELECT ROWID, name from city WHERE latitude IS NULL''')
+    for city in cursor.fetchall():
+      location = geolocator.geocode(city[1])
+      cursor.execute('''UPDATE city SET latitude = ?, longitude = ? WHERE ROWID = ?''',
+        (location.latitude, location.longitude, city[0]))
+      self._conn.commit()
+
   # Extract the text from an HTML page (no tags)
   def gettextonly(self,soup):
     v=soup.string
@@ -84,7 +123,7 @@ class crawler:
 
   # Return true if this url is already indexed
   def isindexed(self,values):
-    return self.sanitizebuilding(values) in self._index
+    return self.sanitizebuilding(values) in self._buildings
 
   def isforumpart(self,url):
     return 'forumdisplay.php' in url or 'showthread.php' in url
@@ -142,6 +181,8 @@ if __name__ == '__main__':
   args = parser.parse_args()
 
   crawler = crawler(args.flush_db)
+
+  crawler.getcitycoordonates()
 
   forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720', # Skyscrapers
             'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls
