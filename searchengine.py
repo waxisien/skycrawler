@@ -182,10 +182,10 @@ if __name__ == '__main__':
 
   crawler = crawler(args.flush_db)
 
-  crawler.getcitycoordonates()
-
   forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720', # Skyscrapers
             'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls
             'http://www.skyscrapercity.com/forumdisplay.php?f=1718'] # Proposed skyscrapers
 
   crawler.crawl(forums, depth=args.depth)
+
+  crawler.getcitycoordonates()
