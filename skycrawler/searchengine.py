@@ -3,50 +3,27 @@
 import urllib2
 from BeautifulSoup import *
 from urlparse import urljoin
-import sqlite3
 import argparse
 import re
 
-from geopy.geocoders import Nominatim
+from data.db import DataManager
+from data.utils import sanitizebuilding
 
 class crawler:
 
   def __init__(self, flush_db=False):
     self._buildings = []
     self._cities = {}
-    self._conn = sqlite3.connect('skyscrapers.db')
+
+    self._db = DataManager()
 
     if flush_db:
-      self.deletedb()
-    self.setupdb()
+      self._db.deletedb()
+    self._db.setupdb()
 
     # Init url index with previously fetch buildings
-    cursor = self._conn.cursor()
-    cursor.execute('''SELECT city.name, building.name from building INNER JOIN city ON building.city_id = city.ROWID''')
-    for building in cursor.fetchall():
-      self._buildings.append(self.sanitizebuilding(building))
-
-    cursor.execute('''SELECT ROWID, name from city''')
-    for city in cursor.fetchall():
-      self._cities[building[1].lower().replace(' ', '')] = building[0]
-
-  def __del__(self):
-    self._conn.close()
-
-  # Create the database tables
-  def setupdb(self): 
-    curs = self._conn.cursor()
-    curs.execute('''CREATE TABLE IF NOT EXISTS city
-              (name text, latitude real, longitude real, creation_date date);''')
-    curs.execute('''CREATE TABLE IF NOT EXISTS building
-             (name text, height int, floors int, link text, city_id int, creation_date date);''')
-    self._conn.commit()
-
-  def deletedb(self):
-    curs = self._conn.cursor()
-    curs.execute('''DROP TABLE IF EXISTS city''')
-    curs.execute('''DROP TABLE IF EXISTS building''')
-    self._conn.commit()
+    self._buildings = self._db.get_building_index()
+    self._cities = self._db.get_city_index()
 
   # Index an individual page
   def addtoindex(self,url,values):
@@ -75,34 +52,13 @@ class crawler:
     if self._cities.get(city_key):
       city_id = self._cities[city_key]
     else:
-      city_id = self.insert_city(city, latitude, longitude)
+      city_id = self._db.insert_city(city, latitude, longitude)
       self._cities[city_key] = city_id
-    self.insert_building(name, height, floors, url, city_id)
-    self._buildings.append(self.sanitizebuilding(values))
+    self._db.insert_building(name, height, floors, url, city_id)
+    self._buildings.append(sanitizebuilding(city, name))
 
-  def insert_building(self, name, height, floors, link, city_id):
-    cursor = self._conn.cursor()
-    cursor.execute('''INSERT INTO building (name, height, floors, link, city_id, creation_date) VALUES(?, ?, ?, ?, ?, datetime())''',
-      (name, height, floors, link, city_id))
-    self._conn.commit()
-
-  def insert_city(self, name, latitude, longitude):
-    cursor = self._conn.cursor()
-    cursor.execute('''INSERT INTO city (name, latitude, longitude, creation_date) VALUES(?, ?, ?, datetime())''',
-      (name, latitude, longitude))
-    self._conn.commit()
-    return cursor.lastrowid
-
-  def getcitycoordonates(self):
-    geolocator = Nominatim()
-    cursor = self._conn.cursor()
-
-    cursor.execute('''SELECT ROWID, name from city WHERE latitude IS NULL''')
-    for city in cursor.fetchall():
-      location = geolocator.geocode(city[1])
-      cursor.execute('''UPDATE city SET latitude = ?, longitude = ? WHERE ROWID = ?''',
-        (location.latitude, location.longitude, city[0]))
-      self._conn.commit()
+  def updatecitycoordonates(self):
+    self._db.updatecitycoordonates()
 
   # Extract the text from an HTML page (no tags)
   def gettextonly(self,soup):
@@ -123,7 +79,7 @@ class crawler:
 
   # Return true if this url is already indexed
   def isindexed(self,values):
-    return self.sanitizebuilding(values) in self._buildings
+    return sanitizebuilding(values[0], values[1]) in self._buildings
 
   def isforumpart(self,url):
     return 'forumdisplay.php' in url or 'showthread.php' in url
@@ -136,11 +92,6 @@ class crawler:
 
   def ismenu(self, url):
     return url.startswith('http://www.skyscrapercity') and 'forumdisplay.php' in url
-
-  def sanitizebuilding(self, values):
-    city = values[0]
-    name = values[1]
-    return (city+name).lower().replace(' ', '')
 
   # Starting with a list of pages, do a breadth
   # first search to the given depth, indexing pages
@@ -188,4 +139,4 @@ if __name__ == '__main__':
 
   crawler.crawl(forums, depth=args.depth)
 
-  crawler.getcitycoordonates()
+  crawler.updatecitycoordonates()
