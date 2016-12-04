@@ -6,12 +6,13 @@ from urlparse import urljoin
 import argparse
 import re
 
-from data.db import DataManager
-from data.utils import sanitizebuilding
+import context
+from skycrawler.data.db import DataManager
+from skycrawler.data.utils import sanitizebuilding
 
-class crawler:
+class Crawler:
 
-  def __init__(self, flush_db=False):
+  def __init__(self, db_location, flush_db=False):
     self._buildings = []
     self._cities = {}
 
@@ -131,7 +132,7 @@ if __name__ == '__main__':
 
   args = parser.parse_args()
 
-  crawler = crawler(args.flush_db)
+  crawler = Crawler(args.flush_db)
 
   forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720', # Skyscrapers
             'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls

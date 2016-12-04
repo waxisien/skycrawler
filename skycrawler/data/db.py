@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from geopy.geocoders import Nominatim
@@ -13,7 +14,8 @@ def dict_factory(cursor, row):
 class DataManager():
 	
   def __init__(self):
-    self._conn = sqlite3.connect('skyscrapers.db')
+    db_location = os.environ['SKYCRAWLER_DB']
+    self._conn = sqlite3.connect(db_location)
     self._conn.row_factory = dict_factory
 
   def __del__(self):
