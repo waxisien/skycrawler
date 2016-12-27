@@ -3,11 +3,35 @@
   <head>
     <style>
     html, body { height:100%; width:100%;}
-    #map {height: 100%;}
+    #map {height: 100%; width: 75%; float: left;}
     </style>
   </head>
   <body>
     <div id="map"></div>
+    <div id="list"></div>
+    <!-- scripts -->
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZcDdDorchlvUFV3VbiU-tqwTRU__47Ms&callback=initMap"
+    async defer></script>
+    <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script type="text/jsx">
+
+      /*** @jsx React.DOM */
+
+      var realPython = React.createClass({
+        render: function() {
+          return (<h2>Greetings, from Real Python!</h2>);
+        }
+      });
+
+      ReactDOM.render(
+        React.createElement(realPython, null),
+        document.getElementById('list')
+      );
+
+    </script>
     <script>
       function initMap() {
         // Create a map object and specify the DOM element for display.
@@ -38,7 +62,5 @@
       }
 
     </script>
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZcDdDorchlvUFV3VbiU-tqwTRU__47Ms&callback=initMap"
-    async defer></script>
+  </body>
+</html>
