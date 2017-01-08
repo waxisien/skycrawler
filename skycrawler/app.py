@@ -1,4 +1,5 @@
 import os
+
 from flask import Flask, request, Response, jsonify, render_template
 
 from data.db import DataManager

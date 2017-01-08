@@ -10,28 +10,16 @@
     <div id="map"></div>
     <div id="list"></div>
     <!-- scripts -->
+    <script>
+      var buildings = {{ buildings|tojson}};
+    </script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZcDdDorchlvUFV3VbiU-tqwTRU__47Ms&callback=initMap"
     async defer></script>
     <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
-    <script type="text/jsx">
-
-      /*** @jsx React.DOM */
-
-      var realPython = React.createClass({
-        render: function() {
-          return (<h2>Greetings, from Real Python!</h2>);
-        }
-      });
-
-      ReactDOM.render(
-        React.createElement(realPython, null),
-        document.getElementById('list')
-      );
-
-    </script>
+    <script src="{{ url_for('static', filename='scripts/js/main.js') }}"></script>
     <script>
       function initMap() {
         // Create a map object and specify the DOM element for display.
@@ -43,10 +31,10 @@
 
         var labels = [];
         var locations = [];
-        {% for building in buildings %}
-          locations.push({lat: {{ building['latitude'] }}, lng: {{ building['longitude'] }}});
-          labels.push('{{ building['city']+' '+ building['name'] }}');
-        {% endfor %}
+        for (var i=0; i<buildings.length; i++) {
+          locations.push({lat: buildings[i].latitude, lng: buildings[i].longitude});
+          labels.push(buildings[i].city+' '+ buildings[i].name);
+        }
 
         var markers = locations.map(function(location, i) {
           return new google.maps.Marker({
