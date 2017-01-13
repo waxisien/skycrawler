@@ -1,0 +1,30 @@
+{
+  "name": "skyscraper-crawler",
+  "version": "1.0.0",
+  "description": "A crawler and a webpage to display latest highrises developments. Informations from [skyscrapercity.com](http://www.skyscrapercity.com) forum.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waxisien/skyscraper-crawler.git"
+  },
+  "author": "Florian Nitzsche flo.nitzsche@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/waxisien/skyscraper-crawler/issues"
+  },
+  "homepage": "https://github.com/waxisien/skyscraper-crawler#readme",
+  "devDependencies": {
+    "bower": "^1.8.0",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-browser": "^2.1.4",
+    "gulp-size": "^2.1.0",
+    "reactify": "^1.1.1"
+  }
+}
