@@ -26,7 +26,7 @@ var DynamicSearch = React.createClass({
 
     return (
       <div>
-        <input type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Search!" />
+        <input id="search-btn" type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Search!" />
         <ul>
           { buildings.map(function(building){ 
             return <li><a href={building.link} target="_blank">{building.city + ' ' + building.name}</a></li> }) }
