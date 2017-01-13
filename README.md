@@ -1,15 +1,21 @@
-# skyscraper-crawler
+# skycrawler
 
-A crawler and a webpage to display latest highrises developments. Informations from [skyscrapercity.com](http://www.skyscrapercity.com) forum.
+A crawler and a webpage to display latest worldwide highrises developments. Data fetched from [skyscrapercity.com](http://www.skyscrapercity.com) forum.
 
 ![drawing](example.png)
 
-## To test
+## How to use
 
 Setup the virtualenv:
 ```
-mkvirtualenv -p `which python2.7` skyscraper`
+mkvirtualenv -p `which python2.7` skyscraper
 pip install -r skyscraper.req
+```
+
+Install front-end dependencies:
+```
+npm install
+bower install
 ```
 
 Indicates where to find your sqlite database:
@@ -19,10 +25,11 @@ export SKYCRAWLER_DB=your_db_path
 
 Get data:
 ```
-./searchengine.py
+./scripts/searchengine.py
 ```
 
-Launch flask and browse page:
+Compile javascript, launch flask and browse page:
 ```
-python server.py
+gulp
+python skyscrawler/app.py
 ```
