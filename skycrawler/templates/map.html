@@ -11,7 +11,7 @@
       var buildings = {{ buildings|tojson}};
     </script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZcDdDorchlvUFV3VbiU-tqwTRU__47Ms&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key={{MY_GOOGLE_MAP_KEY}}&callback=initMap"
     async defer></script>
     <script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>

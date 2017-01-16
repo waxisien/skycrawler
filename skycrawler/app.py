@@ -24,7 +24,9 @@ def map():
 
 	data = db.get_buildings(1000)
 	
-	return render_template('map.html', buildings=data)
+	return render_template('map.html', 
+							buildings=data, 
+							MY_GOOGLE_MAP_KEY=os.environ['MY_GOOGLE_MAP_KEY'])
 
 
 if __name__ == "__main__":

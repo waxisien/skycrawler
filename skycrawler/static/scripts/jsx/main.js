@@ -20,7 +20,7 @@ var DynamicSearch = React.createClass({
     // filter buildings list by value from input box
     if(searchString.length > 0){
       buildings = buildings.filter(function(building){
-        return building.city.toLowerCase().match( searchString );
+        return building.city.toLowerCase().match( searchString ) || building.name.toLowerCase().match( searchString );
       });
     }
 
