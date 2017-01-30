@@ -29,7 +29,11 @@ var DynamicSearch = React.createClass({
         <input id="search-btn" type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Search!" />
         <ul>
           { buildings.map(function(building){ 
-            return <li><a href={building.link} target="_blank">{building.city + ' ' + building.name}</a></li> }) }
+            var building_string = building.city + ' ' + building.name;
+            if (building.height){
+              building_string += ' (' + building.height +'m)';
+            }
+            return <li><a href={building.link} target="_blank">{building_string}</a></li> }) }
         </ul>
       </div>
     )

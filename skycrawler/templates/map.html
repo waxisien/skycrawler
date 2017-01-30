@@ -29,8 +29,10 @@
         var labels = [];
         var locations = [];
         for (var i=0; i<buildings.length; i++) {
-          locations.push({lat: buildings[i].latitude, lng: buildings[i].longitude});
-          labels.push(buildings[i].city+' '+ buildings[i].name);
+          if(buildings[i].latitude) {
+            locations.push({lat: buildings[i].latitude, lng: buildings[i].longitude});
+            labels.push(buildings[i].city+' '+ buildings[i].name);
+          }
         }
 
         var markers = locations.map(function(location, i) {

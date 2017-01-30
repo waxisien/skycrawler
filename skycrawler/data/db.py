@@ -11,6 +11,44 @@ def dict_factory(cursor, row):
       d[col[0]] = row[idx]
   return d
 
+
+class Sql():
+
+  # SELECT
+  get_all_buildings = """
+                      SELECT city.name as cname, building.name as bname from building
+                      INNER JOIN city ON building.city_id = city.ROWID
+                      """
+
+  get_all_cities =  """
+                    SELECT ROWID, name from city
+                    """
+
+  get_buildings_list_infos =  """
+                              SELECT building.name as building_name, city.name as city_name,
+                              latitude, longitude, height, floors, link
+                              from building INNER JOIN city ON building.city_id = city.ROWID 
+                              ORDER BY height DESC LIMIT ?
+                              """
+
+  get_cities_with_no_location = """
+                                SELECT ROWID, name from city WHERE latitude IS NULL
+                                """
+  # INSERTS
+  create_building = """
+                    INSERT INTO building (name, height, floors, link, city_id, creation_date)
+                    VALUES(?, ?, ?, ?, ?, datetime())
+                    """
+
+  create_city = """
+                INSERT INTO city (name, latitude, longitude, creation_date) VALUES(?, ?, ?, datetime())
+                """
+
+  # UPDATE
+  update_city_latitude =  """
+                          UPDATE city SET latitude = ?, longitude = ? WHERE ROWID = ?
+                          """
+
 class DataManager():
 	
   def __init__(self):
@@ -24,7 +62,7 @@ class DataManager():
   def get_building_index(self):
 
     cursor = self._conn.cursor()
-    cursor.execute('''SELECT city.name as cname, building.name as bname from building INNER JOIN city ON building.city_id = city.ROWID''')
+    cursor.execute(Sql.get_all_buildings)
     buildings = []
     for building in cursor.fetchall():
       buildings.append(sanitizebuilding(building['cname'], building['bname']))
@@ -34,7 +72,7 @@ class DataManager():
   def get_city_index(self):
 
     cursor = self._conn.cursor()
-    cursor.execute('''SELECT ROWID, name from city''')
+    cursor.execute(Sql.get_all_cities)
     cities = {}
     for city in cursor.fetchall():
       cities[city['name'].lower().replace(' ', '')] = city['rowid']
@@ -43,33 +81,34 @@ class DataManager():
 
   def insert_building(self, name, height, floors, link, city_id):
     cursor = self._conn.cursor()
-    cursor.execute('''INSERT INTO building (name, height, floors, link, city_id, creation_date) VALUES(?, ?, ?, ?, ?, datetime())''',
-      (name, height, floors, link, city_id))
+    cursor.execute(Sql.create_building, (name, height, floors, link, city_id))
     self._conn.commit()
 
   def insert_city(self, name, latitude, longitude):
     cursor = self._conn.cursor()
-    cursor.execute('''INSERT INTO city (name, latitude, longitude, creation_date) VALUES(?, ?, ?, datetime())''',
-      (name, latitude, longitude))
+    cursor.execute(Sql.create_city, (name, latitude, longitude))
     self._conn.commit()
     return cursor.lastrowid
 
   def updatecitycoordonates(self):
+
     geolocator = Nominatim()
     cursor = self._conn.cursor()
 
-    cursor.execute('''SELECT ROWID, name from city WHERE latitude IS NULL''')
+    cursor.execute(Sql.get_cities_with_no_location)
     for city in cursor.fetchall():
       location = geolocator.geocode(city['name'])
-      cursor.execute('''UPDATE city SET latitude = ?, longitude = ? WHERE ROWID = ?''',
-        (location.latitude, location.longitude, city['rowid']))
-      self._conn.commit()
+      if location:
+        cursor.execute(Sql.update_city_latitude,
+          (location.latitude, location.longitude, city['rowid']))
+        self._conn.commit()
+      else:
+        print "Can't find %s coordonates" % city['name']
 
   def get_buildings(self, limit):
 
     cursor = self._conn.cursor()
-    cursor.execute('''SELECT building.name as building_name, city.name as city_name, latitude, longitude, height, floors, link
-       from building INNER JOIN city ON building.city_id = city.ROWID ORDER BY height DESC LIMIT ?''', (limit, ))
+    cursor.execute(Sql.get_buildings_list_infos, (limit, ))
     data = []
     for url in cursor.fetchall():
       data.append({
