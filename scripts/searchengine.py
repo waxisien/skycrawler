@@ -102,7 +102,9 @@ class Crawler:
       newpages=[]
       for page in pages:
         try:
-          c=urllib2.urlopen(page)
+          headers = { 'User-Agent' : 'Mozilla/5.0' }
+          req = urllib2.Request(page, None, headers)
+          c=urllib2.urlopen(req)
         except:
           print "Could not open %s" % page
           continue
