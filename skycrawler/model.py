@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
+
 from database import Base
 
 
@@ -11,6 +12,7 @@ class Building(Base):
 	floors = Column(Integer)
 	link = Column(String())
 	city_id = Column(Integer, ForeignKey('city.id'))
+	is_active = Column(Boolean, default=True)
 	creation_date = Column(DateTime)
 
 	city = relationship('City')

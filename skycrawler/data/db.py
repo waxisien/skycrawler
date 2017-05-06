@@ -17,27 +17,27 @@ class Sql():
   # SELECT
   get_all_buildings = """
                       SELECT city.name as cname, building.name as bname from building
-                      INNER JOIN city ON building.city_id = city.ROWID
+                      INNER JOIN city ON building.city_id = city.id
                       """
 
   get_all_cities =  """
-                    SELECT ROWID, name from city
+                    SELECT id, name from city
                     """
 
   get_buildings_list_infos =  """
                               SELECT building.name as building_name, city.name as city_name,
                               latitude, longitude, height, floors, link
-                              from building INNER JOIN city ON building.city_id = city.ROWID 
+                              from building INNER JOIN city ON building.city_id = city.id 
                               ORDER BY height DESC LIMIT ?
                               """
 
   get_cities_with_no_location = """
-                                SELECT ROWID, name from city WHERE latitude IS NULL
+                                SELECT id, name from city WHERE latitude IS NULL
                                 """
   # INSERTS
   create_building = """
-                    INSERT INTO building (name, height, floors, link, city_id, creation_date)
-                    VALUES(?, ?, ?, ?, ?, datetime())
+                    INSERT INTO building (name, height, floors, link, city_id, is_active, creation_date)
+                    VALUES(?, ?, ?, ?, ?, 1, datetime())
                     """
 
   create_city = """
@@ -75,7 +75,7 @@ class DataManager():
     cursor.execute(Sql.get_all_cities)
     cities = {}
     for city in cursor.fetchall():
-      cities[city['name'].lower().replace(' ', '')] = city['rowid']
+      cities[city['name'].lower().replace(' ', '')] = city['id']
 
     return cities
 
@@ -100,7 +100,7 @@ class DataManager():
       location = geolocator.geocode(city['name'])
       if location:
         cursor.execute(Sql.update_city_latitude,
-          (location.latitude, location.longitude, city['rowid']))
+          (location.latitude, location.longitude, city['id']))
         self._conn.commit()
       else:
         print "Can't find %s coordonates" % city['name']
