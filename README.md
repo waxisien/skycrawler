@@ -9,7 +9,7 @@ A crawler and a webpage to display latest worldwide highrises developments. Data
 Setup the virtualenv:
 ```
 mkvirtualenv -p `which python2.7` skyscraper
-pip install -r skyscraper.req
+pip install -r skycrawler.req
 ```
 
 Install front-end dependencies:
@@ -32,4 +32,9 @@ Compile javascript, launch flask and browse page:
 ```
 gulp
 python skyscrawler/app.py
+```
+
+Admin access:
+```
+python skycrawler/admin.py
 ```
