@@ -35,6 +35,7 @@ class Crawler:
     floors = None
     latitude = None
     longitude = None
+    status = values[-1]
     for value in values:
       if height is None:
         reg_height_m = re.match(r'~?\+?(?P<height>\d{3,})m', value)
@@ -55,7 +56,7 @@ class Crawler:
     else:
       city_id = self._db.insert_city(city, latitude, longitude)
       self._cities[city_key] = city_id
-    self._db.insert_building(name, height, floors, url, city_id)
+    self._db.insert_building(name, height, floors, url, city_id, status)
     self._buildings.append(sanitizebuilding(city, name))
 
   def updatecitycoordonates(self):

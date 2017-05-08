@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Markup
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
@@ -16,6 +16,17 @@ class BuildingView(ModelView):
 	can_delete = False
 	can_create = False
 	column_searchable_list = ['name', 'city.name']
+
+	def _link_formatter(view, context, model, name):
+		if model.link:
+			markupstring = "<a href='%s' target='_blank'>%s</a>" % (model.link, model.link)
+			return Markup(markupstring)
+		else:
+			return ""
+
+	column_formatters = {
+		'link': _link_formatter
+	}
 
 class CityView(ModelView):
 	can_delete = False

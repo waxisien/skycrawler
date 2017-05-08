@@ -36,8 +36,8 @@ class Sql():
                                 """
   # INSERTS
   create_building = """
-                    INSERT INTO building (name, height, floors, link, city_id, is_active, creation_date)
-                    VALUES(?, ?, ?, ?, ?, 1, datetime())
+                    INSERT INTO building (name, height, floors, link, city_id, status, is_active, creation_date)
+                    VALUES(?, ?, ?, ?, ?, ?, 1, datetime())
                     """
 
   create_city = """
@@ -79,9 +79,9 @@ class DataManager():
 
     return cities
 
-  def insert_building(self, name, height, floors, link, city_id):
+  def insert_building(self, name, height, floors, link, city_id, status):
     cursor = self._conn.cursor()
-    cursor.execute(Sql.create_building, (name, height, floors, link, city_id))
+    cursor.execute(Sql.create_building, (name, height, floors, link, city_id, status))
     self._conn.commit()
 
   def insert_city(self, name, latitude, longitude):

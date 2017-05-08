@@ -12,6 +12,7 @@ class Building(Base):
 	floors = Column(Integer)
 	link = Column(String())
 	city_id = Column(Integer, ForeignKey('city.id'))
+	status = Column(String())
 	is_active = Column(Boolean, default=True)
 	creation_date = Column(DateTime)
 
