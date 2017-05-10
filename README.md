@@ -36,5 +36,6 @@ python skyscrawler/app.py
 
 Admin access:
 ```
+export YOURAPPLICATION_SETTINGS=../conf/admin.cfg
 python skycrawler/admin.py
 ```
