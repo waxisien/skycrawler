@@ -6,6 +6,8 @@ from urlparse import urljoin
 import argparse
 import re
 
+from progress.spinner import Spinner
+
 import context
 from skycrawler.data.db import DataManager
 from skycrawler.data.utils import sanitizebuilding
@@ -99,6 +101,7 @@ class Crawler:
   # first search to the given depth, indexing pages
   # as we go
   def crawl(self,pages,depth=2):
+    spinner = Spinner('Searching ')
     for i in range(depth):
       newpages=[]
       for page in pages:
@@ -122,7 +125,8 @@ class Crawler:
             # We only parse forum menu pages since they contain thread titles
             if self.ismenu(url) and url not in pages:
               newpages.append(url)
-   	  pages=newpages
+          spinner.next()
+      pages=newpages
 
 if __name__ == '__main__':
 
