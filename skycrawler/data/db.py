@@ -1,10 +1,6 @@
 import os
 import sqlite3
 
-from geopy.geocoders import Nominatim
-
-from utils import sanitizebuilding
-
 def dict_factory(cursor, row):
   d = {}
   for idx, col in enumerate(cursor.description):
@@ -59,52 +55,6 @@ class DataManager():
   def __del__(self):
     self._conn.close()
 
-  def get_building_index(self):
-
-    cursor = self._conn.cursor()
-    cursor.execute(Sql.get_all_buildings)
-    buildings = []
-    for building in cursor.fetchall():
-      buildings.append(sanitizebuilding(building['cname'], building['bname']))
-
-    return buildings
-
-  def get_city_index(self):
-
-    cursor = self._conn.cursor()
-    cursor.execute(Sql.get_all_cities)
-    cities = {}
-    for city in cursor.fetchall():
-      cities[city['name'].lower().replace(' ', '')] = city['id']
-
-    return cities
-
-  def insert_building(self, name, height, floors, link, city_id, status):
-    cursor = self._conn.cursor()
-    cursor.execute(Sql.create_building, (name, height, floors, link, city_id, status))
-    self._conn.commit()
-
-  def insert_city(self, name, latitude, longitude):
-    cursor = self._conn.cursor()
-    cursor.execute(Sql.create_city, (name, latitude, longitude))
-    self._conn.commit()
-    return cursor.lastrowid
-
-  def updatecitycoordonates(self):
-
-    geolocator = Nominatim()
-    cursor = self._conn.cursor()
-
-    cursor.execute(Sql.get_cities_with_no_location)
-    for city in cursor.fetchall():
-      location = geolocator.geocode(city['name'])
-      if location:
-        cursor.execute(Sql.update_city_latitude,
-          (location.latitude, location.longitude, city['id']))
-        self._conn.commit()
-      else:
-        print "Can't find %s coordonates" % city['name']
-
   def get_buildings(self, limit):
 
     cursor = self._conn.cursor()
@@ -121,18 +71,3 @@ class DataManager():
             'longitude': url['longitude']})
 
     return data
-
-  # Create the database tables
-  def setupdb(self): 
-    curs = self._conn.cursor()
-    curs.execute('''CREATE TABLE IF NOT EXISTS city
-              (name text, latitude real, longitude real, creation_date date);''')
-    curs.execute('''CREATE TABLE IF NOT EXISTS building
-             (name text, height int, floors int, link text, city_id int, creation_date date);''')
-    self._conn.commit()
-
-  def deletedb(self):
-    curs = self._conn.cursor()
-    curs.execute('''DROP TABLE IF EXISTS city''')
-    curs.execute('''DROP TABLE IF EXISTS building''')
-    self._conn.commit()
