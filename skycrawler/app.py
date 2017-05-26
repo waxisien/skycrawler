@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, request, Response, jsonify, render_template
 
-from data.db import DataManager
+from model import Building
 
 app = Flask(__name__)
 
@@ -10,23 +10,26 @@ app = Flask(__name__)
 @app.route('/raw', methods=['GET'])
 def raw():
 
-	db = DataManager()
+    data = Building.query.order_by(Building.height.desc()).limit(15).all()
 
-	data = db.get_buildings(30)
-
-	return render_template('raw.html', buildings=data)
+    return render_template('raw.html', buildings=data)
 
 
 @app.route('/', methods=['GET'])
 def map():
 
-	db = DataManager()
+    buildings = Building.query.order_by(Building.height.desc()).limit(1000).all()
 
-	data = db.get_buildings(1000)
-	
-	return render_template('map.html', 
-							buildings=data, 
-							MY_GOOGLE_MAP_KEY=os.environ['MY_GOOGLE_MAP_KEY'])
+    data = []
+    for building in buildings:
+        data.append({'name': building.name,
+                     'city': building.city.name,
+                     'height': building.height,
+                     'latitude': building.city.latitude,
+                     'longitude': building.city.longitude,
+                     'link': building.link})
+
+    return render_template('map.html', buildings=data, MY_GOOGLE_MAP_KEY=os.environ['MY_GOOGLE_MAP_KEY'])
 
 
 if __name__ == "__main__":

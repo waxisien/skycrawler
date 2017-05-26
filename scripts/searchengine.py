@@ -9,24 +9,21 @@ import re
 from progress.spinner import Spinner
 
 import context
-from skycrawler.data.db import DataManager
-from skycrawler.data.utils import sanitizebuilding
+from skycrawler import database
+from skycrawler import utils
+
 
 class Crawler:
 
-  def __init__(self, db_location, flush_db=False):
-    self._buildings = []
-    self._cities = {}
-
-    self._db = DataManager()
+  def __init__(self, flush_db=False):
 
     if flush_db:
-      self._db.deletedb()
-    self._db.setupdb()
+      database.drop_db()
+      database.init_db()
 
     # Init url index with previously fetch buildings
-    self._buildings = self._db.get_building_index()
-    self._cities = self._db.get_city_index()
+    self._buildings = utils.get_building_index()
+    self._cities = utils.get_city_index()
 
   # Index an individual page
   def addtoindex(self,url,values):
@@ -56,16 +53,16 @@ class Crawler:
     if self._cities.get(city_key):
       city_id = self._cities[city_key]
     else:
-      city_id = self._db.insert_city(city, latitude, longitude)
+      city_id = utils.insert_city(city, latitude, longitude)
       self._cities[city_key] = city_id
-    self._db.insert_building(name, height, floors, url, city_id, status)
-    self._buildings.append(sanitizebuilding(city, name))
+    utils.insert_building(name, height, floors, url, city_id, status)
+    self._buildings.append(utils.sanitize_building(city, name))
 
   def updatecitycoordonates(self):
-    self._db.updatecitycoordonates()
+    utils.update_city_coordinates()
 
   # Extract the text from an HTML page (no tags)
-  def gettextonly(self,soup):
+  def gettextonly(self, soup):
     v=soup.string
     if v==None:   
       c=soup.contents
@@ -78,14 +75,14 @@ class Crawler:
       return v.strip()
 
   # Seperate the words by any non-whitespace character
-  def separatewords(self,text):
+  def separatewords(self, text):
     return [x.strip() for x in text.split('|')]
 
   # Return true if this url is already indexed
-  def isindexed(self,values):
-    return sanitizebuilding(values[0], values[1]) in self._buildings
+  def isindexed(self, values):
+    return utils.sanitize_building(values[0], values[1]) in self._buildings
 
-  def isforumpart(self,url):
+  def isforumpart(self, url):
     return 'forumdisplay.php' in url or 'showthread.php' in url
 
   def isfirstpage(self, url):
