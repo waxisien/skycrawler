@@ -15,9 +15,9 @@ from skycrawler import utils
 
 class Crawler:
 
-  def __init__(self, flush_db=False):
+  def __init__(self, init_db=False):
 
-    if flush_db:
+    if init_db:
       database.drop_db()
       database.init_db()
 
@@ -129,14 +129,15 @@ if __name__ == '__main__':
 
   parser = argparse.ArgumentParser(description='Crawler to get latest skyscrapers developpment.')
   
-  parser.add_argument('--flush-db', dest='flush_db', action='store_true')
-  parser.set_defaults(flush_db=False)
+  parser.add_argument('--init-db', dest='init_db', action='store_true',
+                      help="Init database, drop if already exist")
+  parser.set_defaults(init_db=False)
   parser.add_argument("-d", "--depth", type=int, default=1,
                     help="The depth used to crawl the site")
 
   args = parser.parse_args()
 
-  crawler = Crawler(args.flush_db)
+  crawler = Crawler(args.init_db)
 
   forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720', # Skyscrapers
             'http://www.skyscrapercity.com/forumdisplay.php?f=4070', # Megatalls

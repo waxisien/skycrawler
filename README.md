@@ -18,14 +18,15 @@ npm install
 bower install
 ```
 
-Indicates where to find your sqlite database:
+Set a few env variables:
 ```
-export SKYCRAWLER_DB=your_db_path
+export SKYCRAWLER_DB=<your sql lite db path>
+export MY_GOOGLE_MAP_KEY=<google map key>
 ```
 
 Get data:
 ```
-./scripts/searchengine.py
+./scripts/searchengine.py --init-db
 ```
 
 Compile javascript, launch flask and browse page:
