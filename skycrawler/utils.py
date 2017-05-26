@@ -4,24 +4,26 @@ from database import db_session
 from skycrawler.model import Building, City
 
 
-def sanitizebuilding(city, name):
+def sanitize_building(city, name):
 
-  return (city+name).lower().replace(' ', '')
+    return (city+name).lower().replace(' ', '')
+
 
 def get_building_index():
 
-	buildings = Building.query.all()
-	result = []
-	for building in buildings:
-		result.append(sanitizebuilding(building.city.name, building.name))
-	return result
+    buildings = Building.query.all()
+    result = []
+    for building in buildings:
+        result.append(sanitize_building(building.city.name, building.name))
+    return result
+
 
 def get_city_index():
 
     cities = City.query.all()
     result = {}
     for city in cities:
-      result[city.name.lower().replace(' ', '')] = city.id
+        result[city.name.lower().replace(' ', '')] = city.id
 
     return result
 
@@ -48,10 +50,10 @@ def update_city_coordinates():
 
     cities = db_session.query(City).filter(City.latitude == None).all()
     for city in cities:
-      location = geolocator.geocode(city.name)
-      if location:
-        city.latitude = location.latitude
-        city.longitude = location.longitude
-        db_session.commit()
-      else:
-        print "Can't find %s coordonates" % city.name
+        location = geolocator.geocode(city.name)
+        if location:
+            city.latitude = location.latitude
+            city.longitude = location.longitude
+            db_session.commit()
+        else:
+            print "Can't find %s coordonates" % city.name
