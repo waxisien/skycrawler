@@ -10,15 +10,15 @@ app = Flask(__name__)
 @app.route('/raw', methods=['GET'])
 def raw():
 
-    data = Building.query.order_by(Building.height.desc()).limit(15).all()
+    data = Building.query.order_by(Building.height.desc()).filter(Building.is_active == 1).limit(15).all()
 
     return render_template('raw.html', buildings=data)
 
 
 @app.route('/', methods=['GET'])
-def map():
+def index():
 
-    buildings = Building.query.order_by(Building.height.desc()).limit(1000).all()
+    buildings = Building.query.order_by(Building.height.desc()).filter(Building.is_active == 1).limit(1000).all()
 
     data = []
     for building in buildings:
