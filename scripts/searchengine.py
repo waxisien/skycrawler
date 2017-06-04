@@ -45,8 +45,8 @@ class Crawler:
                     height = reg_height_ft.group('height')
                     height = int(int(height) * 0.3048)
 
-                if floors is None:
-                    reg_floors = re.match(r'(?P<floors>\d{2,})~?\+? fl', value)
+            if floors is None:
+                reg_floors = re.match(r'(?P<floors>\d{2,})~?\+? fl', value)
                 if reg_floors:
                     floors = reg_floors.group('floors')
 

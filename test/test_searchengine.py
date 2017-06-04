@@ -50,3 +50,8 @@ def test_searchengine(urlopen):
 
     crawled_buildings = Building.query.all()
     assert len(crawled_buildings) == 3
+
+    assert crawled_buildings[0].name == "Vista Tower"
+    assert crawled_buildings[0].height == 362
+    assert crawled_buildings[0].floors == 98
+    assert crawled_buildings[0].city.name == "CHICAGO"
