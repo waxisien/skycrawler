@@ -37,6 +37,12 @@ python skyscrawler/app.py
 
 Admin access:
 ```
-export YOURAPPLICATION_SETTINGS=../conf/admin.cfg
+export SKY_ADMIN_SETTINGS=../conf/admin.cfg
 python skycrawler/admin.py
+```
+
+Unit test:
+```
+pip install pytest
+pytest .
 ```

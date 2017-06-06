@@ -7,7 +7,7 @@ from model import Building, City
 from database import db_session
 
 app = Flask(__name__)
-app.config.from_envvar('YOURAPPLICATION_SETTINGS')
+app.config.from_envvar('SKY_ADMIN_SETTINGS')
 
 
 class BuildingView(ModelView):
