@@ -7,3 +7,5 @@ script:
  coverage run --source skycrawler -m pytest
 after_success:
   coveralls
+notifications:
+  email: false
