@@ -2,7 +2,7 @@ language: python
 python:
   - "2.7"
 install:
-- pip install -r skycrawler.req -r test/tests.req
+- pip install -r skycrawler.req -r tests/tests.req
 script:
  coverage run --source skycrawler -m pytest
 after_success:
