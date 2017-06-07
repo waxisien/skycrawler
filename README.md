@@ -1,6 +1,7 @@
 # skycrawler
 
 [![Build Status](https://travis-ci.org/waxisien/skycrawler.svg?branch=master)](https://travis-ci.org/waxisien/skycrawler)
+[![Coverage Status](https://coveralls.io/repos/github/waxisien/skycrawler/badge.svg)](https://coveralls.io/github/waxisien/skycrawler)
 
 A crawler and a webpage to display latest worldwide highrises developments. Data fetched from [skyscrapercity.com](http://www.skyscrapercity.com) forum.
 
