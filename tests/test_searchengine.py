@@ -8,8 +8,12 @@ from scripts.searchengine import Crawler
 from skycrawler.model import Building
 
 
+def test_database_begins_empty(db_test):
+    assert Building.query.all() == []
+
+
 @patch('scripts.searchengine.urllib2.urlopen')
-def test_searchengine(urlopen):
+def test_searchengine(urlopen, db_test):
 
     page_1 = '''
         <body>
