@@ -21,9 +21,20 @@ class City(SQLAlchemyObjectType):
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    all_buildings = SQLAlchemyConnectionField(Building)
-    all_cities = SQLAlchemyConnectionField(City)
-    building = graphene.Field(Building)
+    buildings = graphene.List(Building)
+    cities = graphene.List(City)
+    building = graphene.Field(Building, id=graphene.ID())
 
+    def resolve_buildings(self, args, context, info):
+        query = Building.get_query(context)
+        return query.filter(BuildingModel.is_active == 1).all()
+
+    def resolve_building(self, args, context, info):
+        query = Building.get_query(context)
+        return query.get(args['id'])
+
+    def resolve_cities(self, args, context, info):
+        query = City.get_query(context)
+        return query.all()
 
 schema = graphene.Schema(query=Query, types=[Building, City])
