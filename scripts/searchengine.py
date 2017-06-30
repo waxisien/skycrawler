@@ -8,7 +8,6 @@ from urlparse import urljoin
 from BeautifulSoup import *
 from progress.spinner import Spinner
 
-import context
 from skycrawler import database
 from skycrawler import utils
 

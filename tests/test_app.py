@@ -3,7 +3,6 @@ import pytest
 
 os.environ["MY_GOOGLE_MAP_KEY"] = 'test'
 
-import context
 from skycrawler.app import app
 
 

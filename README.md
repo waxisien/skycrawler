@@ -13,6 +13,7 @@ Setup the virtualenv:
 ```
 mkvirtualenv -p `which python2.7` skyscraper
 pip install -r skycrawler.req
+pip install -e .
 ```
 
 Install front-end dependencies:

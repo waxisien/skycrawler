@@ -3,7 +3,6 @@ from mock import patch, Mock
 
 os.environ["SKYCRAWLER_DB"] = ':memory:'
 
-import context
 from scripts.searchengine import Crawler
 from skycrawler.model import Building
 

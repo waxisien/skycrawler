@@ -3,7 +3,6 @@ os.environ["SKYCRAWLER_DB"] = ':memory:'
 
 import pytest
 
-import context
 from skycrawler.database import db_session, init_db, drop_db
 from skycrawler.model import Building, City
 

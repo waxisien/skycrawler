@@ -3,7 +3,6 @@ import pytest
 
 os.environ["SKY_ADMIN_SETTINGS"] = "../conf/admin.cfg"
 
-import context
 from skycrawler.admin import app
 
 
