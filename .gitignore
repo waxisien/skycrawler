@@ -2,6 +2,5 @@
 *.db
 node_modules/
 bower_components/
-js/
 .idea/
 .DS_Store
