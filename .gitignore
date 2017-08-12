@@ -4,3 +4,6 @@ node_modules/
 bower_components/
 .idea/
 .DS_Store
+.cache
+build/
+dist/
