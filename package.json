@@ -24,6 +24,8 @@
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-browser": "^2.1.4",
+    "gulp-inject": "^4.2.0",
+    "gulp-main-bower-files": "^1.6.2",
     "gulp-size": "^2.1.0",
     "reactify": "^1.1.1"
   }
