@@ -4,7 +4,8 @@ from mock import patch, Mock
 os.environ["SKYCRAWLER_DB"] = ':memory:'
 
 from scripts.searchengine import Crawler
-from skycrawler.model import Building
+from skycrawler.model import Building, City
+from skycrawler.utils import update_city_coordinates
 
 
 def test_database_begins_empty(db_test):
@@ -58,3 +59,21 @@ def test_searchengine(urlopen, db_test):
     assert crawled_buildings[0].height == 362
     assert crawled_buildings[0].floors == 98
     assert crawled_buildings[0].city.name == "CHICAGO"
+
+
+@patch('skycrawler.utils.Nominatim.geocode')
+def test_update_city_coordinates(geocode, data_city_no_location):
+
+    class Coordonates:
+        latitude = 100
+        longitude = 100
+
+    geocode.return_value = Coordonates()
+
+    cities = City.query.all()
+    assert len(cities) == 1
+    assert cities[0].latitude is None
+    update_city_coordinates()
+
+    assert cities[0].latitude == 100
+    assert cities[0].longitude == 100

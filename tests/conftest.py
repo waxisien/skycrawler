@@ -27,3 +27,13 @@ def data_test(db_test):
     db_test.add(building2)
     db_test.commit()
     return db_test
+
+
+@pytest.fixture
+def data_city_no_location(db_test):
+
+    montreal = City('Boston', None, None)
+    db_test.add(montreal)
+    db_test.commit()
+
+    return db_test
