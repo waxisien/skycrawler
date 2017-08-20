@@ -2,9 +2,8 @@ from flask import Flask, Markup
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-from model import Building, City
-
-from database import db_session
+from skycrawler.model import Building, City
+from skycrawler.database import db_session
 
 app = Flask(__name__)
 app.config.from_envvar('SKY_ADMIN_SETTINGS')

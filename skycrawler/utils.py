@@ -1,6 +1,6 @@
 from geopy.geocoders import Nominatim
 
-from database import db_session
+from skycrawler.database import db_session
 from skycrawler.model import Building, City
 
 
@@ -56,4 +56,4 @@ def update_city_coordinates():
             city.longitude = location.longitude
             db_session.commit()
         else:
-            print "Can't find %s coordonates" % city.name
+            print("Can't find %s coordonates" % city.name)

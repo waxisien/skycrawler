@@ -1,8 +1,9 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
-from model import Building as BuildingModel
-from model import City as CityModel
+
+from skycrawler.model import Building as BuildingModel
+from skycrawler.model import City as CityModel
 
 
 class Building(SQLAlchemyObjectType):

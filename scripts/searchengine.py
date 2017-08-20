@@ -2,10 +2,10 @@
 
 import re
 import argparse
-import urllib2
-from urlparse import urljoin
+from urllib.request import Request, urlopen
+from urllib.parse import urljoin
 
-from BeautifulSoup import *
+from bs4 import BeautifulSoup
 from progress.spinner import Spinner
 
 from skycrawler import database
@@ -109,10 +109,10 @@ class Crawler:
             for page in pages:
                 try:
                     headers = {'User-Agent': 'Mozilla/5.0'}
-                    req = urllib2.Request(page, None, headers)
-                    c = urllib2.urlopen(req)
-                except urllib2.URLError:
-                    print "Could not open %s" % page
+                    req = Request(page, None, headers)
+                    c = urlopen(req)
+                except urlopen.URLError:
+                    print("Could not open %s" % page)
                     continue
                 soup = BeautifulSoup(c.read())
 
