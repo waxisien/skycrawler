@@ -11,8 +11,7 @@ A crawler and a webpage to display latest worldwide highrises developments. Data
 
 Setup the virtualenv:
 ```
-mkvirtualenv -p `which python2.7` skyscraper
-pip install -r skycrawler.req
+mkvirtualenv -p `which python3.5` skyscraper
 pip install -e .
 ```
 

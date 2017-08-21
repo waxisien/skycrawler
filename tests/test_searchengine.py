@@ -1,5 +1,5 @@
 import os
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 
 os.environ["SKYCRAWLER_DB"] = ':memory:'
 
@@ -12,7 +12,7 @@ def test_database_begins_empty(db_test):
     assert Building.query.all() == []
 
 
-@patch('scripts.searchengine.urllib2.urlopen')
+@patch('scripts.searchengine.urlopen')
 def test_searchengine(urlopen, db_test):
 
     page_1 = '''

@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
-from database import Base
+from skycrawler.database import Base
 
 
 class Building(Base):

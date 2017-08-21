@@ -1,8 +1,9 @@
 language: python
 python:
-  - "2.7"
+  - "3.5"
 install:
-- pip install -r skycrawler.req -r tests/tests.req
+- pip install -e .
+- pip install -r tests/tests.req
 script:
  coverage run --source skycrawler -m pytest
 after_success:
