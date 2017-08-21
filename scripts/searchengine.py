@@ -4,6 +4,7 @@ import re
 import argparse
 from urllib.request import Request, urlopen
 from urllib.parse import urljoin
+from urllib.error import URLError
 
 from bs4 import BeautifulSoup
 from progress.spinner import Spinner
@@ -111,10 +112,10 @@ class Crawler:
                     headers = {'User-Agent': 'Mozilla/5.0'}
                     req = Request(page, None, headers)
                     c = urlopen(req)
-                except urlopen.URLError:
+                except URLError:
                     print("Could not open %s" % page)
                     continue
-                soup = BeautifulSoup(c.read())
+                soup = BeautifulSoup(c.read(), "html.parser")
 
                 links = soup('a')
                 for link in links:
