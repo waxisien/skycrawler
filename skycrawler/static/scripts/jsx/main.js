@@ -33,6 +33,7 @@ var DynamicSearch = React.createClass({
             if (building.height){
               building_string += ' (' + building.height +'m)';
             }
+            building_string += ' '+building.status;
             return <li><a href={building.link} target="_blank">{building_string}</a></li> }) }
         </ul>
       </div>

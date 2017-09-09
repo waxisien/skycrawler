@@ -30,7 +30,9 @@ def index():
                      'height': building.height,
                      'latitude': building.city.latitude,
                      'longitude': building.city.longitude,
-                     'link': building.link})
+                     'link': building.link,
+                     'status': building.status,
+                     })
 
     return render_template('map.html', buildings=data, MY_GOOGLE_MAP_KEY=os.environ['MY_GOOGLE_MAP_KEY'])
 
