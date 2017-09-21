@@ -27,7 +27,12 @@ var DynamicSearch = React.createClass({displayName: "DynamicSearch",
 
     return (
       React.createElement("div", null, 
-        React.createElement("input", {id: "search-btn", type: "text", value: this.state.searchString, onChange: this.handleChange, placeholder: "Search!"}), 
+        React.createElement("div", {className: "wrap"}, 
+           React.createElement("div", {className: "search"}, 
+              React.createElement("input", {type: "text", value: this.state.searchString, onChange: this.handleChange, className: "searchTerm", 
+              placeholder: "Search for a city or building"})
+           )
+        ), 
         React.createElement("ul", null, 
            buildings.map(function(building){ 
             var building_string = building.city + ' ' + building.name;

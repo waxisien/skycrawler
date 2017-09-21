@@ -23,7 +23,6 @@ gulp.task('del', function () {
 gulp.task('default', ['del'], function() {
   gulp.start('transform');
   gulp.start('build');
-  //gulp.watch('./skycrawler/static/scripts/jsx/*.js', ['transform']);
 });
 
 gulp.task('build', function () {
@@ -41,4 +40,9 @@ gulp.task('build', function () {
   .pipe(
     gulp.dest('./skycrawler/templates')
   );
+});
+
+
+gulp.task('watch', function () {
+  gulp.watch('./skycrawler/static/scripts/jsx/*.js', ['transform']);
 });
