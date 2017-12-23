@@ -26,16 +26,16 @@ class Query(graphene.ObjectType):
     cities = graphene.List(City)
     building = graphene.Field(Building, id=graphene.ID())
 
-    def resolve_buildings(self, args, context, info):
-        query = Building.get_query(context)
+    def resolve_buildings(self, info):
+        query = Building.get_query(info)
         return query.filter(BuildingModel.is_active == 1).all()
 
-    def resolve_building(self, args, context, info):
-        query = Building.get_query(context)
-        return query.get(args['id'])
+    def resolve_building(self, info, id):
+        query = Building.get_query(info)
+        return query.get(id)
 
-    def resolve_cities(self, args, context, info):
-        query = City.get_query(context)
+    def resolve_cities(self, info):
+        query = City.get_query(info)
         return query.all()
 
 schema = graphene.Schema(query=Query, types=[Building, City])
