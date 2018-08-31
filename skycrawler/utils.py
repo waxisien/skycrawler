@@ -1,8 +1,13 @@
-from geopy.geocoders import Nominatim
+import certifi
+import ssl
+
+from geopy.geocoders import Nominatim, options
 
 from skycrawler.database import db_session
 from skycrawler.model import Building, City
 
+ctx = ssl.create_default_context(cafile=certifi.where())
+options.default_ssl_context = ctx
 
 def sanitize_building(city, name):
 

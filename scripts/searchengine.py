@@ -94,11 +94,11 @@ class Crawler:
 
     @staticmethod
     def is_useful(url):
-        return url.startswith('http://www.skyscrapercity') and Crawler.is_first_page(url) and Crawler.is_forum_part(url)
+        return url.startswith('https://www.skyscrapercity') and Crawler.is_first_page(url) and Crawler.is_forum_part(url)
 
     @staticmethod
     def is_menu(url):
-        return url.startswith('http://www.skyscrapercity') and 'forumdisplay.php' in url
+        return url.startswith('https://www.skyscrapercity') and 'forumdisplay.php' in url
 
     # Starting with a list of pages, do a breadth
     # first search to the given depth, indexing pages
@@ -112,7 +112,8 @@ class Crawler:
                     headers = {'User-Agent': 'Mozilla/5.0'}
                     req = Request(page, None, headers)
                     c = urlopen(req)
-                except URLError:
+                except URLError as e:
+                    print(e)
                     print("Could not open %s" % page)
                     continue
                 soup = BeautifulSoup(c.read(), "html.parser")
@@ -146,9 +147,9 @@ if __name__ == '__main__':
 
     crawler = Crawler(args.init_db)
 
-    forums = ['http://www.skyscrapercity.com/forumdisplay.php?f=1720',  # Skyscrapers
-              'http://www.skyscrapercity.com/forumdisplay.php?f=4070',  # Megatalls
-              'http://www.skyscrapercity.com/forumdisplay.php?f=1718']  # Proposed skyscrapers
+    forums = ['https://www.skyscrapercity.com/forumdisplay.php?f=1720',  # Skyscrapers
+              'https://www.skyscrapercity.com/forumdisplay.php?f=4070',  # Megatalls
+              'https://www.skyscrapercity.com/forumdisplay.php?f=1718']  # Proposed skyscrapers
 
     crawler.crawl(forums, depth=args.depth)
 

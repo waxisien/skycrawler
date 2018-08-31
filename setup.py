@@ -21,7 +21,7 @@ setup(
         'graphene==2.0.1',
         'graphene-sqlalchemy==2.0.0',
         'graphql-core==2.0',
-        'geopy==1.11.0',
+        'geopy==1.14.0',
         'itsdangerous==0.24',
         'Jinja2==2.8',
         'MarkupSafe==0.23',

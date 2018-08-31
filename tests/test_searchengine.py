@@ -17,26 +17,26 @@ def test_searchengine(urlopen, db_test):
 
     page_1 = '''
         <body>
-            <a href="http://www.skyscrapercity.com/showthread.php?t=1737547">
+            <a href="https://www.skyscrapercity.com/showthread.php?t=1737547">
             CHICAGO | Vista Tower | 362m | 1186ft | 98 fl | U/C
             </a>
-            <a href="http://www.skyscrapercity.com/showthread.php?t=7460827">
+            <a href="https://www.skyscrapercity.com/showthread.php?t=7460827">
             NEW YORK | 3WTC (175 Greenwich Street) | 329m | 1079ft | 69 fl | T/O
             </a>
-            <a href="http://www.unknownsite.com/showthread.php?t=7460827">
+            <a href="https://www.unknownsite.com/showthread.php?t=7460827">
             NEW YORK | 3WTC (175 Greenwich Street) | 329m | 1079ft | 69 fl | T/O
             </a>
-            <a href="http://www.skyscrapercity.com/forumdisplay.php?f=902">
+            <a href="https://www.skyscrapercity.com/forumdisplay.php?f=902">
             Forum link
             </a>
         </body>
     '''
     page_2 = '''
         <body>
-            <a href="http://www.skyscrapercity.com/showthread.php?t=1737547">
+            <a href="https://www.skyscrapercity.com/showthread.php?t=1737547">
             CHICAGO | Vista Tower | 362m | 1186ft | 98 fl | U/C
             </a>
-            <a href="http://www.skyscrapercity.com/showthread.php?t=1518868">
+            <a href="https://www.skyscrapercity.com/showthread.php?t=1518868">
             NEW YORK | One Vanderbilt Place | 427m | 1401ft | 58 fl | U/C
             </a>
         </body>
