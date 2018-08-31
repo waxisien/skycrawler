@@ -35,7 +35,7 @@ Get data:
 Compile javascript, launch flask and browse page:
 ```
 gulp
-python skyscrawler/app.py
+python skycrawler/app.py
 ```
 
 Admin access:
