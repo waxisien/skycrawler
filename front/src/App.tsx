@@ -1,19 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { graphqlTest } from './lib/graphql';
+import * as React from 'react';
+import { ApolloProvider } from '@apollo/react-hooks';
 
-const App = () => {
+import { client } from './lib/graphql';
+import Buildings from './Buildings';
 
-  graphqlTest();
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        Root
-      </header>
-    </div>
-  );
-};
+const App = () => (
+  <ApolloProvider client={client}>
+    <Buildings/>
+  </ApolloProvider>
+)
 
 export default App;
