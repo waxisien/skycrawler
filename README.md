@@ -11,14 +11,14 @@ A crawler and a webpage to display latest worldwide highrises developments. Data
 
 Setup the virtualenv:
 ```
-mkvirtualenv -p `which python3.6` skyscraper
+mkvirtualenv -p `which python3.7` skyscraper
 pip install -e .
 ```
 
 Install front-end dependencies:
 ```
-npm install
-bower install
+cd front
+yarn
 ```
 
 Set a few env variables:
@@ -32,10 +32,11 @@ Get data:
 ./scripts/searchengine.py --init-db
 ```
 
-Compile javascript, launch flask and browse page:
+Launch flask, launch react app in a second terminal and browse page:
 ```
-gulp
 python skycrawler/app.py
+cd front
+yarn start
 ```
 
 Admin access:
