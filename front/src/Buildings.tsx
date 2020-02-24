@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 
 import { IBuilding } from './types';
@@ -16,11 +17,13 @@ const BUILDINGS = gql`
   {
     buildings {
       id
+      floors
       height
       name
       city {
         name
       }
+      status
     }
   }
 `;
@@ -31,36 +34,87 @@ const useStyles = makeStyles({
   },
 });
 
+type Order = 'asc' | 'desc';
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key,
+): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
 const Buildings = () => {
   const classes = useStyles();
   const { loading, error, data } = useQuery(BUILDINGS);
 
+  const [order, setOrder] = React.useState<Order>('desc');
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
+  const handleRequestSort = (event: React.MouseEvent<unknown>) => {
+    const isAsc = order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+  };
+
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} size="small" aria-label="a dense table">
+      <Table className={classes.table} stickyHeader size="small">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell align="right">Height (m)</TableCell>
-            <TableCell align="right">City</TableCell>
+            <TableCell>City</TableCell>
+            <TableCell align="right" sortDirection={order}>
+              <TableSortLabel
+                active={true}
+                direction={order}
+                onClick={handleRequestSort}
+              >
+                Height (m)
+              </TableSortLabel>
+            </TableCell>
+            <TableCell align="right">Floors</TableCell>
+            <TableCell align="right">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.buildings.map((building: IBuilding) => (
+          {stableSort<IBuilding>(data.buildings, getComparator(order, 'height')).map((building) => (
             <TableRow key={building.id}>
               <TableCell component="th" scope="row">
                 {building.name}
               </TableCell>
+              <TableCell>{building.city.name}</TableCell>
               <TableCell align="right">{building.height}</TableCell>
-              <TableCell align="right">{building.city.name}</TableCell>
+              <TableCell align="right">{building.floors}</TableCell>
+              <TableCell align="right">{building.status}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </TableContainer>);
+    </TableContainer>
+  );
 };
 
 export default Buildings;

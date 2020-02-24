@@ -6,7 +6,9 @@ interface ICity {
 
 export interface IBuilding {
     name: string;
+    floors: number;
     height: number;
     id: string;
     city: ICity;
+    status: string;
 }
