@@ -17,7 +17,8 @@ jobs:
       install:
         - yarn
       script:
-        yarn test
+        - yarn lint
+        - yarn test
 
 notifications:
   email: false
