@@ -11,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 
-import { IBuilding } from './types';
+import { Building } from './types';
 
 const BUILDINGS = gql`
   {
@@ -36,7 +36,9 @@ const useStyles = makeStyles({
 
 type Order = 'asc' | 'desc';
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+type CompareResult = -1 | 0 | 1; 
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T): CompareResult {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -46,16 +48,16 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-function getComparator<Key extends keyof any>(
+function getComparator<Key extends keyof any>(  // eslint-disable-line
   order: Order,
   orderBy: Key,
 ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
   return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a, b): CompareResult => descendingComparator(a, b, orderBy)
+    : (a, b): CompareResult => -descendingComparator(a, b, orderBy) as CompareResult;
 }
 
-function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T[] {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -65,7 +67,7 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map(el => el[0]);
 }
 
-const Buildings = () => {
+const Buildings = (): JSX.Element => {
   const classes = useStyles();
   const { loading, error, data } = useQuery(BUILDINGS);
 
@@ -74,7 +76,7 @@ const Buildings = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>) => {
+  const handleRequestSort = (): void => {
     const isAsc = order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
   };
@@ -100,7 +102,7 @@ const Buildings = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {stableSort<IBuilding>(data.buildings, getComparator(order, 'height')).map((building) => (
+          {stableSort<Building>(data.buildings, getComparator(order, 'height')).map((building) => (
             <TableRow key={building.id}>
               <TableCell component="th" scope="row">
                 {building.name}

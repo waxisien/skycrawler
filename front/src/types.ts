@@ -1,14 +1,12 @@
-import { StringValueNode } from "graphql";
-
-interface ICity {
+interface City {
   name: string;
 }
 
-export interface IBuilding {
+export interface Building {
     name: string;
     floors: number;
     height: number;
     id: string;
-    city: ICity;
+    city: City;
     status: string;
 }
