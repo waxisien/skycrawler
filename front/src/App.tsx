@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { IconButton } from '@material-ui/core';
 import PlaceOutlinedIcon from '@material-ui/icons/PlaceOutlined';
 import ViewListOutlinedIcon from '@material-ui/icons/ViewListOutlined';
 
 import { client } from './lib/graphql';
-import Buildings from './Buildings';
+import BuildingListView from './BuildingListView';
+import MapView from './MapView';
 
 import './App.css';
 
 const App = (): JSX.Element => {
 
-  const [isViewMap, setIsViewMap] = useState(false);
+  const [isViewMap, setIsViewMap] = React.useState(true);
 
   const toggleMenu = (): void => setIsViewMap(!isViewMap);
 
@@ -23,8 +24,8 @@ const App = (): JSX.Element => {
           {isViewMap && <ViewListOutlinedIcon style={{ fill: 'white' }}/>}
         </IconButton>
       </header>
-      {!isViewMap && <Buildings/>}
-      {isViewMap && 'Incoming...'}
+      {!isViewMap && <BuildingListView/>}
+      {isViewMap && <MapView/>}
     </ApolloProvider>
   );
 };

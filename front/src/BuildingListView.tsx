@@ -1,6 +1,5 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,22 +10,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 
+import { BUILDINGS } from './lib/queries';
 import { Building } from './types';
-
-const BUILDINGS = gql`
-  {
-    buildings {
-      id
-      floors
-      height
-      name
-      city {
-        name
-      }
-      status
-    }
-  }
-`;
 
 const useStyles = makeStyles({
   table: {
@@ -67,7 +52,7 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T[] {
   return stabilizedThis.map(el => el[0]);
 }
 
-const Buildings = (): JSX.Element => {
+const BuildingListView = (): JSX.Element => {
   const classes = useStyles();
   const { loading, error, data } = useQuery(BUILDINGS);
 
@@ -119,4 +104,4 @@ const Buildings = (): JSX.Element => {
   );
 };
 
-export default Buildings;
+export default BuildingListView;
