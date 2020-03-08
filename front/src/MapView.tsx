@@ -4,13 +4,7 @@ import GoogleMapReact from 'google-map-react';
 
 import { BUILDINGS } from './lib/queries';
 import { Building } from './types';
-
-interface BuildingMarkerProps {
-  text: string;
-  lng: number;
-  lat: number;
-}
-const BuildingMarker = (props: BuildingMarkerProps): JSX.Element => <div>{props.text}</div>;
+import MapMarker from './MapMarker';
 
 const MapView = (): JSX.Element => {
   const center = {lat: 59.938043, lng: 30.337157};
@@ -28,7 +22,7 @@ const MapView = (): JSX.Element => {
         defaultZoom={1}
       >
         {data.buildings.map((building: Building) => (
-          <BuildingMarker
+          <MapMarker
             key={building.id}
             lat={building.city.latitude}
             lng={building.city.longitude}
