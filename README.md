@@ -24,7 +24,7 @@ yarn
 Set a few env variables:
 ```
 export SKYCRAWLER_DB=<your sql lite db path>
-export MY_GOOGLE_MAP_KEY=<google map key>
+export REACT_APP_GOOGLE_MAP_API_KEY=<google map key>
 ```
 
 Get data:
