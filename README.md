@@ -5,7 +5,7 @@
 
 A crawler and a webpage to display latest worldwide highrises developments. Data fetched from [skyscrapercity.com](http://www.skyscrapercity.com) forum.
 
-![drawing](example.png)
+![drawing](example-react.png)
 
 ## How to use
 
