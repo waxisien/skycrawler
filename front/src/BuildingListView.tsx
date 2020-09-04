@@ -67,7 +67,7 @@ const BuildingListView = (): JSX.Element => {
   };
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className="list">
       <Table className={classes.table} stickyHeader size="small">
         <TableHead>
           <TableRow>
