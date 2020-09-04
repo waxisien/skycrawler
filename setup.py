@@ -25,7 +25,7 @@ setup(
         'geopy==1.20.0',
         'itsdangerous==1.1.0',
         'Jinja2==2.10.3',
-        'MarkupSafe==1.0',
+        'MarkupSafe==1.1.1',
         'progress==1.5',
         'SQLAlchemy==1.3.11',
         'Werkzeug==0.16',
