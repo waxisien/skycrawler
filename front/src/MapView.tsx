@@ -15,7 +15,7 @@ const MapView = (): JSX.Element => {
   if (error) return <p>Error :(</p>;
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
+    <div className={'map'}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY as string }}
         defaultCenter={center}

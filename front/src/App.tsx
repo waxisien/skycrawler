@@ -23,6 +23,7 @@ const App = (): JSX.Element => {
           {!isViewMap && <PlaceOutlinedIcon style={{ fill: 'white' }}/>}
           {isViewMap && <ViewListOutlinedIcon style={{ fill: 'white' }}/>}
         </IconButton>
+        Skycrawler
       </header>
       {!isViewMap && <BuildingListView/>}
       {isViewMap && <MapView/>}
