@@ -12,6 +12,7 @@
     "google-map-react": "^1.1.6",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
+    "points-cluster": "^0.1.4",
     "react": "^16.12.0",
     "react-dom": "^16.13.0",
     "react-scripts": "3.2.0",

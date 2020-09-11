@@ -1,0 +1,20 @@
+.cluster-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  background-color: #000;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  line-height: 22px;
+  font-weight: bold;
+}
+
+.cluster-marker:hover {
+  z-index: 1;
+}
