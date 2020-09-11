@@ -24,6 +24,7 @@ class Crawler:
         # Init url index with previously fetch buildings
         self._buildings = utils.get_building_index()
         self._cities = utils.get_city_index()
+        self._new_buildings = 0
 
     # Index an individual page
     def add_to_index(self, url, values):
@@ -57,6 +58,7 @@ class Crawler:
             self._cities[city_key] = city_id
         utils.insert_building(name, height, floors, url, city_id, status)
         self._buildings.append(utils.sanitize_building(city, name))
+        self._new_buildings += 1
 
     @staticmethod
     def update_city_coordonates():
@@ -85,8 +87,8 @@ class Crawler:
         return utils.sanitize_building(values[0], values[1]) in self._buildings
 
     @staticmethod
-    def is_forum_part(url):
-        return 'forumdisplay.php' in url or 'showthread.php' in url
+    def is_thread(url):
+        return '/threads/' in url
 
     @staticmethod
     def is_first_page(url):
@@ -94,11 +96,11 @@ class Crawler:
 
     @staticmethod
     def is_useful(url):
-        return url.startswith('https://www.skyscrapercity') and Crawler.is_first_page(url) and Crawler.is_forum_part(url)
+        return url.startswith('https://www.skyscrapercity') and Crawler.is_first_page(url) and Crawler.is_thread(url)
 
     @staticmethod
     def is_menu(url):
-        return url.startswith('https://www.skyscrapercity') and 'forumdisplay.php' in url
+        return url.startswith('https://www.skyscrapercity') and not Crawler.is_thread(url)
 
     # Starting with a list of pages, do a breadth
     # first search to the given depth, indexing pages
@@ -124,6 +126,7 @@ class Crawler:
                         url = urljoin(page, link['href'])
                         url = url.split('#')[0]  # remove location portion
                         values = self.split_words(link.getText())
+                        print(url)
                         if len(values) > 3 and self.is_useful(url) and not self.is_indexed(values):
                             self.add_to_index(url, values)
                         # We only parse forum menu pages since they contain thread titles
@@ -132,6 +135,9 @@ class Crawler:
                         spinner.next()
             # Update pages to crawl
             pages = newpages
+
+    def display_stats(self):
+        print(f'Found {self._new_buildings} new buildings for a grand total of {len(self._buildings)}.')
 
 if __name__ == '__main__':
 
@@ -147,10 +153,14 @@ if __name__ == '__main__':
 
     crawler = Crawler(args.init_db)
 
-    forums = ['https://www.skyscrapercity.com/forumdisplay.php?f=1720',  # Skyscrapers
-              'https://www.skyscrapercity.com/forumdisplay.php?f=4070',  # Megatalls
-              'https://www.skyscrapercity.com/forumdisplay.php?f=1718']  # Proposed skyscrapers
+    forums = ['https://www.skyscrapercity.com/forums/skyscrapers.1720/',
+              'https://www.skyscrapercity.com/forums/proposed-skyscrapers.1728/',
+              'https://www.skyscrapercity.com/forums/megatalls.4070/',
+              'https://www.skyscrapercity.com/forums/supertalls.902/',
+              'https://www.skyscrapercity.com/forums/proposed-supertalls.1718/',
+              ]
 
     crawler.crawl(forums, depth=args.depth)
+    crawler.display_stats()
 
     crawler.update_city_coordonates()

@@ -17,27 +17,27 @@ def test_searchengine(urlopen, db_test):
 
     page_1 = '''
         <body>
-            <a href="https://www.skyscrapercity.com/showthread.php?t=1737547">
-            CHICAGO | Vista Tower | 362m | 1186ft | 98 fl | U/C
+            <a href="/threads/jakarta-thamrin-nine-towers-383m-1256ft-75-fl-275m-902ft-62-fl-u-c.1646674/">
+            JAKARTA | Thamrin Nine Towers | 383m | 1256ft | 75 fl | 275m | 902ft | 62 fl | U/C
             </a>
-            <a href="https://www.skyscrapercity.com/showthread.php?t=7460827">
-            NEW YORK | 3WTC (175 Greenwich Street) | 329m | 1079ft | 69 fl | T/O
+            <a href="/threads/kuala-lumpur-tower-m-klcc-700m-2296ft-145-fl-prep.1639309/">
+            KUALA LUMPUR | Tower M KLCC | 700m+ | 2296ft+ | 145 fl | Prep
             </a>
-            <a href="https://www.unknownsite.com/showthread.php?t=7460827">
-            NEW YORK | 3WTC (175 Greenwich Street) | 329m | 1079ft | 69 fl | T/O
+            <a href="/threads/seoul-yongsan-international-business-district-621m-2037ft-pro.2000974/">
+            SEOUL | Yongsan International Business District | 621m | 2037ft | Pro
             </a>
-            <a href="https://www.skyscrapercity.com/forumdisplay.php?f=902">
+            <a href="/forums/megatalls.4070/watch">
             Forum link
             </a>
         </body>
     '''
     page_2 = '''
         <body>
-            <a href="https://www.skyscrapercity.com/showthread.php?t=1737547">
-            CHICAGO | Vista Tower | 362m | 1186ft | 98 fl | U/C
+            <a href="/threads/seoul-yongsan-international-business-district-621m-2037ft-pro.2000974/">
+            SEOUL | Yongsan International Business District | 621m | 2037ft | Pro
             </a>
-            <a href="https://www.skyscrapercity.com/showthread.php?t=1518868">
-            NEW YORK | One Vanderbilt Place | 427m | 1401ft | 58 fl | U/C
+            <a href="/threads/moscow-neva-towers-345m-1132ft-79-fl-302m-991ft-69-fl-t-o.396624/">
+            MOSCOW | NEVA Towers | 345m | 1132ft | 79 fl | 302m | 991ft | 69 fl | T/O
             </a>
         </body>
     '''
@@ -48,17 +48,17 @@ def test_searchengine(urlopen, db_test):
     crawler = Crawler(True)
 
     # Startup page
-    forums = ['http://fakepage.com']
+    forums = ['https://www.skyscrapercity.com/fakepage']
 
     crawler.crawl(forums, depth=2)
 
     crawled_buildings = Building.query.all()
-    assert len(crawled_buildings) == 3
+    assert len(crawled_buildings) == 4
 
-    assert crawled_buildings[0].name == "Vista Tower"
-    assert crawled_buildings[0].height == 362
-    assert crawled_buildings[0].floors == 98
-    assert crawled_buildings[0].city.name == "CHICAGO"
+    assert crawled_buildings[0].name == "Thamrin Nine Towers"
+    assert crawled_buildings[0].height == 383
+    assert crawled_buildings[0].floors == 75
+    assert crawled_buildings[0].city.name == "JAKARTA"
 
 
 @patch('skycrawler.utils.Nominatim.geocode')
