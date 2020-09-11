@@ -126,7 +126,6 @@ class Crawler:
                         url = urljoin(page, link['href'])
                         url = url.split('#')[0]  # remove location portion
                         values = self.split_words(link.getText())
-                        print(url)
                         if len(values) > 3 and self.is_useful(url) and not self.is_indexed(values):
                             self.add_to_index(url, values)
                         # We only parse forum menu pages since they contain thread titles
