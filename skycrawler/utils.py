@@ -51,7 +51,7 @@ def insert_city(name, latitude, longitude):
 
 def update_city_coordinates():
 
-    geolocator = Nominatim()
+    geolocator = Nominatim(user_agent='skycrawler-app')
 
     cities = db_session.query(City).filter(City.latitude == None).all()
     for city in cities:
