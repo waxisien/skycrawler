@@ -6,6 +6,7 @@ export const BUILDINGS = gql`
       id
       floors
       height
+      link
       name
       city {
         name

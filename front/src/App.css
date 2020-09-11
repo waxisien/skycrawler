@@ -16,3 +16,7 @@
   right: 0px;
   bottom: 0px;
 }
+
+.list tr:hover {
+  cursor: pointer;
+}
