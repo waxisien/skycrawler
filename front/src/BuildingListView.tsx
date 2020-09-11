@@ -66,8 +66,12 @@ const BuildingListView = (): JSX.Element => {
     setOrder(isAsc ? 'desc' : 'asc');
   };
 
+  const handleClick = (link: string) => (): void => {
+    window.open(link, '_blank')
+  };
+
   return (
-    <TableContainer component={Paper} className="list">
+    <TableContainer component={Paper} className="list" >
       <Table className={classes.table} stickyHeader size="small">
         <TableHead>
           <TableRow>
@@ -88,7 +92,7 @@ const BuildingListView = (): JSX.Element => {
         </TableHead>
         <TableBody>
           {stableSort<Building>(data.buildings, getComparator(order, 'height')).map((building) => (
-            <TableRow key={building.id}>
+            <TableRow key={building.id} hover={true} onClick={handleClick(building.link)}>
               <TableCell component="th" scope="row">
                 {building.name}
               </TableCell>
