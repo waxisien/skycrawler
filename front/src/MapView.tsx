@@ -10,7 +10,7 @@ import MapClusterMarker from './MapClusterMarker';
 
 const adaptBuildingList = (buildings: Building[]) =>
   buildings.map((building: Building) => ({
-    key: building.id,
+    id: building.id,
     lat: building.city.latitude,
     lng: building.city.longitude,
     text: building.name,
@@ -19,7 +19,7 @@ const adaptBuildingList = (buildings: Building[]) =>
 const MapView = (): JSX.Element => {
   const defaultCenter = {lat: 40, lng: 30};
   const defaultZoom = 2;
-  const minZoom = 1;
+  const minZoom = 2;
   const maxZoom = 7;
 
   const { loading, error, data } = useQuery(BUILDINGS);
@@ -47,7 +47,7 @@ const MapView = (): JSX.Element => {
         lat: cluster.wy,
         lng: cluster.wx,
         numPoints: cluster.numPoints,
-        id: `${cluster.numPoints}_${cluster.points[0].id}`,
+        key: `${cluster.numPoints}_${cluster.points[0].id}`,
         points: cluster.points,
       }));
   };
@@ -77,7 +77,7 @@ const MapView = (): JSX.Element => {
           } else {
             return (
               <MapClusterMarker
-                key={item.id}
+                key={item.key}
                 lat={item.lat}
                 lng={item.lng}
                 points={item.points}
