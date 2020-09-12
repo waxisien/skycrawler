@@ -2,8 +2,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   background-color: #000;
   border: 2px solid #fff;
   border-radius: 100%;
@@ -11,7 +11,7 @@
   transform: translate(-50%, -50%);
   color: white;
   text-align: center;
-  line-height: 22px;
+  line-height: 26px;
   font-weight: bold;
 }
 
