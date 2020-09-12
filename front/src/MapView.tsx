@@ -17,8 +17,10 @@ const adaptBuildingList = (buildings: Building[]) =>
   }));
 
 const MapView = (): JSX.Element => {
-  const defaultCenter = {lat: 59.938043, lng: 30.337157};
-  const defaultZoom = 1;
+  const defaultCenter = {lat: 40, lng: 30};
+  const defaultZoom = 2;
+  const minZoom = 1;
+  const maxZoom = 7;
 
   const { loading, error, data } = useQuery(BUILDINGS);
   const [clusters, setClusters] = useState([]);
@@ -30,12 +32,11 @@ const MapView = (): JSX.Element => {
 
   const getClusters = (center: Coords, zoom: number, bounds: Bounds) => {
     const mapOptions = {
-      minZoom: 0,
-      maxZoom: 16,
-      radius: 60,
+      minZoom,
+      maxZoom,
+      radius: 50,
     }
-    const _clusters = supercluster(buildings, mapOptions);
-    return _clusters({ center, zoom, bounds });
+    return supercluster(buildings, mapOptions)({ center, zoom, bounds });
   };
 
   const createClusters = (center: Coords, zoom: number, bounds: Bounds) => {
@@ -61,6 +62,7 @@ const MapView = (): JSX.Element => {
         defaultCenter={defaultCenter}
         defaultZoom={defaultZoom}
         onChange={onMapChange}
+        options={{ minZoom, maxZoom }}
       >
         {clusters.map((item: any) => {
           if (item.numPoints === 1) {
