@@ -68,7 +68,7 @@ const MapView = (): JSX.Element => {
           if (item.numPoints === 1) {
             return (
               <MapMarker
-                key={item.id}
+                key={item.key}
                 lat={item.points[0].lat}
                 lng={item.points[0].lng}
                 text={item.points[0].text}
