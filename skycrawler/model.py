@@ -56,3 +56,16 @@ class City(Base):
 
     def __str__(self):
         return self.name
+
+
+class Synchronization(Base):
+    __tablename__ = "synchronization"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    syncDate = Column(DateTime, nullable=False)
+    buildingsRetrieved = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return '<Synchronization %r>' % self.syncDate
+
+    def __str__(self):
+        return self.syncDate
