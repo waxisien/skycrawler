@@ -135,8 +135,9 @@ class Crawler:
             # Update pages to crawl
             pages = newpages
 
-    def display_stats(self):
+    def display_and_save_stats(self):
         print(f'Found {self._new_buildings} new buildings for a grand total of {len(self._buildings)}.')
+        utils.insert_synchronization(self._new_buildings)
 
 if __name__ == '__main__':
 
@@ -160,6 +161,6 @@ if __name__ == '__main__':
               ]
 
     crawler.crawl(forums, depth=args.depth)
-    crawler.display_stats()
+    crawler.display_and_save_stats()
 
     crawler.update_city_coordonates()

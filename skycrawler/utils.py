@@ -1,10 +1,11 @@
 import certifi
+import datetime
 import ssl
 
 from geopy.geocoders import Nominatim, options
 
 from skycrawler.database import db_session
-from skycrawler.model import Building, City
+from skycrawler.model import Building, City, Synchronization
 
 ctx = ssl.create_default_context(cafile=certifi.where())
 options.default_ssl_context = ctx
@@ -62,3 +63,12 @@ def update_city_coordinates():
             db_session.commit()
         else:
             print("Can't find %s coordonates" % city.name)
+
+
+def insert_synchronization(buildings_retrieved):
+    sync = Synchronization(
+        syncDate=datetime.datetime.now(),
+        buildingsRetrieved=buildings_retrieved,
+    )
+    db_session.add(sync)
+    db_session.commit()
