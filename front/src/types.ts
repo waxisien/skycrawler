@@ -13,3 +13,9 @@ export interface Building {
   name: string;
   status: string;
 }
+
+export interface Stats {
+  lastSynchronization: string;
+  totalBuildings: number;
+  totalCities: number;
+}
