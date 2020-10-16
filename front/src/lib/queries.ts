@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from "apollo-boost";
 
 export const BUILDINGS = gql`
   {
@@ -14,6 +14,16 @@ export const BUILDINGS = gql`
         longitude
       }
       status
+    }
+  }
+`;
+
+export const STATS = gql`
+  {
+    stats {
+      lastSynchronization
+      totalBuildings
+      totalCities
     }
   }
 `;

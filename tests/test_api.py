@@ -19,8 +19,10 @@ def test_get_a_building_by_id(data_test):
     assert result.data['building']['name'] == 'Building 1'
     assert result.data['building']['city']['name'] == 'Montreal'
 
+
 def test_get_stats(data_test):
-    result = schema.execute('{stats{lastSynchronization, totalBuildings}}')
+    result = schema.execute('{stats{lastSynchronization, totalBuildings, totalCities}}')
     assert not result.errors
     assert result.data['stats']['lastSynchronization']
     assert result.data['stats']['totalBuildings'] == 2
+    assert result.data['stats']['totalCities'] == 1

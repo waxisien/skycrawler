@@ -24,6 +24,7 @@ class City(SQLAlchemyObjectType):
 class Stats(ObjectType):
     last_synchronization = graphene.DateTime()
     total_buildings = graphene.Int()
+    total_cities = graphene.Int()
 
     @staticmethod
     def resolve_last_synchronization(root, info):
@@ -34,6 +35,10 @@ class Stats(ObjectType):
     @staticmethod
     def resolve_total_buildings(root, info):
         return BuildingModel.query.count()
+
+    @staticmethod
+    def resolve_total_cities(root, info):
+        return CityModel.query.count()
 
 
 class Query(graphene.ObjectType):

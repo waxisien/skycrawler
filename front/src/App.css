@@ -20,3 +20,7 @@
 .list tr:hover {
   cursor: pointer;
 }
+
+.header .info-dialog-icon {
+  float: right;
+}
