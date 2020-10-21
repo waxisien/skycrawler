@@ -8,7 +8,7 @@ import InfoOutlined from '@material-ui/icons/InfoOutlined';
 import { client } from './lib/graphql';
 import BuildingListView from './BuildingListView';
 import InfoDialog from './InfoDialog';
-import MapView from './MapView';
+import MapViewLayout from './MapViewLayout';
 
 import './App.css';
 
@@ -34,7 +34,7 @@ const App = (): JSX.Element => {
         <InfoDialog open={infoDialogOpen} onClose={toggleDialogInfo}/>
       </header>
       {!isViewMap && <BuildingListView/>}
-      {isViewMap && <MapView/>}
+      {isViewMap && <MapViewLayout/>}
     </ApolloProvider>
   );
 };
