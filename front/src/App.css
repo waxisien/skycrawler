@@ -9,12 +9,28 @@
   letter-spacing: 2px;
 }
 
-.map, .list {
+.map-view-layout, .list {
   position: absolute;
   top: 3em;
   left: 0px;
   right: 0px;
   bottom: 0px;
+}
+
+.map-view-layout {
+  display: flex;
+}
+
+.map-view-column {
+  flex: 65%;
+}
+
+.map-view-column .map {
+  height: 100%;
+}
+
+.map-view-list-column {
+  flex: 35%;
 }
 
 .list tr:hover {
