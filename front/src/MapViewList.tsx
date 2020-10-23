@@ -32,7 +32,13 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
       mapBounds.sw.lat < lat && mapBounds.sw.lng < lng
   };
 
-  const buildings = data.buildings.filter(isInBoundaries);
+  const compareByHeight = (a: Building, b: Building) => b.height - a.height;
+
+  const buildings = data.buildings.filter(isInBoundaries).sort(compareByHeight);
+
+  const handleClick = (link: string) => (): void => {
+    window.open(link, '_blank')
+  };
 
   const renderRow = (props: ListChildComponentProps): JSX.Element => {
     // eslint-disable-next-line
@@ -40,9 +46,12 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
 
     const building: Building = buildings[index];
   
+    const primaryLabel = `${building.name} - ${building.city.name}`;
+    const secondaryLabel = building.height ? `${building.height}m`: '';
+
     return (
-      <ListItem button style={style} key={index}>
-        <ListItemText primary={`${building.name} - ${building.city.name}`} />
+      <ListItem button style={style} key={index} onClick={handleClick(building.link)}>
+        <ListItemText primary={primaryLabel} secondary={secondaryLabel}/>
       </ListItem>
     );
   };
