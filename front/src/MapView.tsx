@@ -16,44 +16,61 @@ const adaptBuildingList = (buildings: Building[]) =>
     text: building.name,
   }));
 
-const MapView = (): JSX.Element => {
+interface MapViewProps {
+  onBoundsChange: (bounds: Bounds) => void;
+}
+
+const MapView = (props: MapViewProps): JSX.Element => {
   const defaultCenter = {lat: 40, lng: 30};
   const defaultZoom = 2;
   const minZoom = 2;
   const maxZoom = 7;
 
+  const { onBoundsChange } = props;
+
   const { loading, error, data } = useQuery(BUILDINGS);
   const [clusters, setClusters] = useState([]);
 
+  const buildings = adaptBuildingList(data ? data.buildings: []);
+
+  const getClusters = React.useCallback(
+    (center: Coords, zoom: number, bounds: Bounds) => {
+      const mapOptions = {
+        minZoom,
+        maxZoom,
+        radius: 50,
+      }
+      return supercluster(buildings, mapOptions)({ center, zoom, bounds });
+    },
+    [buildings],
+  );
+
+  const createClusters = React.useCallback(
+    (center: Coords, zoom: number, bounds: Bounds) => {
+      if (!bounds) return [];
+
+      return getClusters(center, zoom, bounds).map(
+        (cluster: any) => ({
+          lat: cluster.wy,
+          lng: cluster.wx,
+          numPoints: cluster.numPoints,
+          key: `${cluster.numPoints}_${cluster.points[0].id}`,
+          points: cluster.points,
+        }));
+    },
+    [getClusters],
+  );
+
+  const onMapChange = React.useCallback(
+    (value: ChangeEventValue): void => {
+      setClusters(createClusters(value.center, value.zoom, value.bounds));
+      onBoundsChange(value.bounds);
+    },
+    [createClusters, onBoundsChange, setClusters],
+  );
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-
-  const buildings = adaptBuildingList(data.buildings);
-
-  const getClusters = (center: Coords, zoom: number, bounds: Bounds) => {
-    const mapOptions = {
-      minZoom,
-      maxZoom,
-      radius: 50,
-    }
-    return supercluster(buildings, mapOptions)({ center, zoom, bounds });
-  };
-
-  const createClusters = (center: Coords, zoom: number, bounds: Bounds) => {
-    if (!bounds) return [];
-
-    return getClusters(center, zoom, bounds).map(
-      (cluster: any) => ({
-        lat: cluster.wy,
-        lng: cluster.wx,
-        numPoints: cluster.numPoints,
-        key: `${cluster.numPoints}_${cluster.points[0].id}`,
-        points: cluster.points,
-      }));
-  };
-
-  const onMapChange = (value: ChangeEventValue): void =>
-    setClusters(createClusters(value.center, value.zoom, value.bounds));
 
   return (
     <div className={'map'}>
@@ -90,4 +107,4 @@ const MapView = (): JSX.Element => {
   );
 };
 
-export default MapView;
+export default React.memo(MapView);
