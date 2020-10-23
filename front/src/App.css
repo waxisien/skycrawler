@@ -31,6 +31,7 @@
 
 .map-view-list-column {
   flex: 35%;
+  border-left: 2px solid #D0D0D0;
 }
 
 .list tr:hover {
