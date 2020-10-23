@@ -35,6 +35,7 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
   const buildings = data.buildings.filter(isInBoundaries);
 
   const renderRow = (props: ListChildComponentProps): JSX.Element => {
+    // eslint-disable-next-line
     const { index, style } = props;
 
     const building: Building = buildings[index];
