@@ -22,7 +22,7 @@
 }
 
 .map-view-column {
-  flex: 65%;
+  flex: 70%;
 }
 
 .map-view-column .map {
@@ -30,8 +30,13 @@
 }
 
 .map-view-list-column {
-  flex: 35%;
+  flex: 30%;
   border-left: 2px solid #D0D0D0;
+}
+
+/* Used to prevent a loop when using flexbox and react-virtualized-auto-sizer */
+.map-view-list-column .list-container {
+  height: 100%;
 }
 
 .list tr:hover {
