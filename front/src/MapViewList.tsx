@@ -57,18 +57,20 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
   };
 
   return (
-    <AutoSizer>
-      {({ height, width}): JSX.Element => (
-        <FixedSizeList
-          height={height}
-          width={width}
-          itemSize={46}
-          itemCount={buildings.length}
-        >
-          {renderRow}
-        </FixedSizeList>
-      )}
-    </AutoSizer>
+    <div className="list-container">
+      <AutoSizer>
+        {({ height, width}): JSX.Element => (
+          <FixedSizeList
+            height={height}
+            width={width}
+            itemSize={46}
+            itemCount={buildings.length}
+          >
+            {renderRow}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </div>
   );
 }
 
