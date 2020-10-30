@@ -47,7 +47,7 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
     const building: Building = buildings[index];
   
     const primaryLabel = `${building.name} - ${building.city.name}`;
-    const secondaryLabel = building.height ? `${building.height}m`: '';
+    const secondaryLabel = building.height ? `${building.height}m`: 'N/A';
 
     return (
       <ListItem button style={style} key={index} onClick={handleClick(building.link)}>
