@@ -8,3 +8,4 @@ bower_components/
 build/
 dist/
 .vscode/
+*.egg-info/

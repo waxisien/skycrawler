@@ -34,7 +34,7 @@ Get data:
 
 Launch flask, launch react app in a second terminal and browse page:
 ```
-python skycrawler/app.py
+python bin/dev_server.py
 cd front
 yarn start
 ```
