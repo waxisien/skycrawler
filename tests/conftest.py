@@ -4,8 +4,15 @@ os.environ["SKYCRAWLER_DB"] = ':memory:'
 
 import pytest
 
+from skycrawler.app import create_app
 from skycrawler.database import db_session, init_db, drop_db
 from skycrawler.model import Building, City, Synchronization
+
+
+@pytest.fixture
+def app_client():
+    app = create_app()
+    return app.test_client()
 
 
 @pytest.fixture
