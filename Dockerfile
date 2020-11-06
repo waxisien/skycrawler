@@ -4,6 +4,9 @@ EXPOSE 80
 
 RUN pip install --no-cache gunicorn==20.0.4
 
+# TODO: get rid of certifi
+RUN pip install certifi
+
 WORKDIR /opt/src/skycrawler/
 
 # copy files on the workdir so we can install it
