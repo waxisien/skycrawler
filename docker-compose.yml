@@ -3,14 +3,14 @@ version: '3.1'
 services:
 
   skycrawler_back:
-    image: waxisien/skycrawler-back:test
+    image: waxisien/skycrawler-back:0.1
     environment:
         - SKYCRAWLER_DB=/etc/skyscraper.db
     volumes:
       - /opt/skycrawler/skyscraper.db:/etc/skyscraper.db
 
   skycrawler_front:
-    image: waxisien/skycrawler-front:test
+    image: waxisien/skycrawler-front:0.1
     ports:
       - 80:80
     depends_on:
