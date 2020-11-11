@@ -50,7 +50,7 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
     const secondaryLabel = building.height ? `${building.height}m`: 'N/A';
 
     return (
-      <ListItem button style={style} key={index} onClick={handleClick(building.link)}>
+      <ListItem button style={style} key={index} onClick={handleClick(building.link)} divider>
         <ListItemText primary={primaryLabel} secondary={secondaryLabel}/>
       </ListItem>
     );
@@ -63,7 +63,7 @@ const MapViewList = (props: MapViewListProps): JSX.Element => {
           <FixedSizeList
             height={height}
             width={width}
-            itemSize={46}
+            itemSize={65}
             itemCount={buildings.length}
           >
             {renderRow}
