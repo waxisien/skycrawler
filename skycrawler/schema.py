@@ -1,6 +1,7 @@
 import graphene
 from graphene import ObjectType, relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
+from sqlalchemy.sql import null
 
 from skycrawler.model import Building as BuildingModel
 from skycrawler.model import City as CityModel
@@ -50,7 +51,9 @@ class Query(graphene.ObjectType):
 
     def resolve_buildings(self, info):
         query = Building.get_query(info)
-        return query.filter(BuildingModel.is_active == 1).all()
+        return query.join(CityModel).filter(
+            BuildingModel.is_active == 1, CityModel.latitude != null(), CityModel.longitude != null(),
+        ).all()
 
     def resolve_building(self, info, id):
         query = Building.get_query(info)

@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     long_description=open('README.md').read(),
     url='http://github.com/waxisien/skycrawler',
+    scripts=['scripts/searchengine.py'],
     install_requires=[
         'beautifulsoup4==4.8.1',
         'click==7.0',
