@@ -11,7 +11,7 @@ Companion of [skycrawler-react](https://github.com/waxisien/skycrawler-react).
 
 ## How to use
 
-Setup the virtualenv:
+### Setup
 ```
 mkvirtualenv -p `which python3.7` skyscraper
 pip install -e .
@@ -27,19 +27,19 @@ Get data:
 ./scripts/searchengine.py --init-db
 ```
 
-Flask server:
+### Flask server
 ```
 python bin/dev_server.py
 ```
 
-Admin access:
+### Admin app
 ```
 export SKY_ADMIN_SETTINGS=../conf/admin.cfg
 python skycrawler/admin.py
 ```
 
-Unit test:
+### Unit tests
 ```
 pip install pytest
-pytest .
+pytest tests/
 ```
