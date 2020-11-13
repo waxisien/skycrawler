@@ -7,6 +7,8 @@ A crawler and a webpage to display latest worldwide highrises developments. Data
 
 ![drawing](example-react.png)
 
+Companion of [skycrawler-react](https://github.com/waxisien/skycrawler-react).
+
 ## How to use
 
 Setup the virtualenv:
@@ -15,16 +17,9 @@ mkvirtualenv -p `which python3.7` skyscraper
 pip install -e .
 ```
 
-Install front-end dependencies:
+Set SQLite path:
 ```
-cd front
-yarn
-```
-
-Set a few env variables:
-```
-export SKYCRAWLER_DB=<your sql lite db path>
-export REACT_APP_GOOGLE_MAP_API_KEY=<google map key>
+export SKYCRAWLER_DB=<your SQLite db path>
 ```
 
 Get data:
@@ -32,11 +27,9 @@ Get data:
 ./scripts/searchengine.py --init-db
 ```
 
-Launch flask, launch react app in a second terminal and browse page:
+Flask server:
 ```
 python bin/dev_server.py
-cd front
-yarn start
 ```
 
 Admin access:
