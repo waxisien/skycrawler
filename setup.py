@@ -25,7 +25,7 @@ setup(
         'graphql-core==2.2.1',
         'geopy==2.0.0',
         'itsdangerous==1.1.0',
-        'Jinja2==2.10.3',
+        'Jinja2==2.11.3',
         'MarkupSafe==1.1.1',
         'progress==1.5',
         'SQLAlchemy==1.3.11',
