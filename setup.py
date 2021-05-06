@@ -17,7 +17,7 @@ setup(
         'click==7.0',
         'Flask==1.1.1',
         'Flask-Admin==1.5.4',
-        'Flask-Cors==3.0.8',
+        'Flask-Cors==3.0.9',
         'Flask-GraphQL==2.0.0',
         'Flask-SQLAlchemy==2.4.1',
         'graphene==2.1.8',
