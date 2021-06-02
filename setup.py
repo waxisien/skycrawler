@@ -29,7 +29,7 @@ setup(
         'MarkupSafe==1.1.1',
         'progress==1.5',
         'SQLAlchemy==1.3.11',
-        'urllib3==1.25.10',
+        'urllib3==1.26.5',
         'Werkzeug==0.16',
         'WTForms==2.2.1',
     ],
